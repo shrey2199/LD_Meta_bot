@@ -4,7 +4,7 @@
   </a>
 </p>
 
-# Libdrive Metadata Rebuild Bot (LMR-Bot)
+# Libdrive Manager Bot (LMR-Bot)
 
 ## Run Locally
 
