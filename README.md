@@ -22,4 +22,4 @@ Run Docker Container.. `docker run --name lmr-bot lmr-bot`
 
 `/help` Get Instructions on How to Use to bot !!
 
-`/refresh` Rebuild Libdrive Metadata !!
+`/rebuild` Rebuild Libdrive Metadata !!
