@@ -109,8 +109,10 @@ def short(m):
             CatN = 0
             for category in CatL:
                 CatN+=1
-                CatS=CatS + str(CatN) + ". <b>" + str(category["name"]) + " :</b>\n    Type : <code>" + str(category["type"]) + "</code>\n    Folder ID : <code>" + str(category["id"]) + "</code>\n"
-            bot.send_message(m.chat.id, text="<b>Categories :-</b>\n\n" + str(CatS) , parse_mode=telegram.ParseMode.HTML)
+                CatID=str(category["name"])
+                CatURL=f"https://{LD_DOMAIN}/browse/{CatID}"
+                CatS=CatS + str(CatN) + ". <b>" + str(category["name"]) + " :</b>\n    Type : <code>" + str(category["type"]) + "</code>\n    Folder ID : <code>" + str(category["id"]) + "</code>\n    URL : <a href='" + str(CatURL) + "'>" + str(category["name"]) + "</a>\n"
+            bot.send_message(m.chat.id, text="<b>Categories :-</b>\n\n" + str(CatS) , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
         else:
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
