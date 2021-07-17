@@ -1,0 +1,38 @@
+{
+    "name": "LD_Meta_bot",
+    "description": "A Telegram bot for rebuilding Libdrive Metadata",
+    "logo": "",
+    "keywords": [
+      "bot",
+      "telegram",
+      "python"
+    ],
+    "repository": "https://github.com/shrey2199/LD_Meta_bot",
+    "website": "https://github.com/shrey2199/LD_Meta_bot",
+    "success_url": "https://t.me/s_rawal",
+    "env": {
+      
+      "BOT_TOKEN": {
+        "description": "The telegram bot token that you get from @BotFather.",
+        "required": true
+      },
+      "SECRET": {
+        "description": "Your Libdrive Settings SECRET.",
+        "required": true
+      },
+      "LD_DOMAIN": {
+        "description": "Your Libdrive Domain without https:// or http://",
+        "required": true
+      },
+      "ADMIN_IDS": {
+        "description": "The Telegram User ID of the Owner of the Bot. Get it by using /info in @MissRose_bot.",
+        "required": false
+      }
+    },
+    "formation": {
+            "worker": {
+                "quantity": 1,
+                "size": "free"
+            }
+      }
+}
