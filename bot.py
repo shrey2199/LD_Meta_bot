@@ -5,8 +5,13 @@ import telebot
 import logging
 import requests
 import json
+import time
 from functools import wraps
 from random import *
+
+# UPTIME
+
+botStartTime = time.time()
 
 # CONFIG
 
@@ -30,6 +35,24 @@ bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
+def get_readable_time(seconds: int) -> str:
+    result = ''
+    (days, remainder) = divmod(seconds, 86400)
+    days = int(days)
+    if days != 0:
+        result += f'{days}d'
+    (hours, remainder) = divmod(remainder, 3600)
+    hours = int(hours)
+    if hours != 0:
+        result += f'{hours}h'
+    (minutes, seconds) = divmod(remainder, 60)
+    minutes = int(minutes)
+    if minutes != 0:
+        result += f'{minutes}m'
+    seconds = int(seconds)
+    result += f'{seconds}s'
+    return result
+
 def restricted(func):
     @wraps(func)
     def wrapped(update, *args, **kwargs):
@@ -44,7 +67,9 @@ def restricted(func):
 @bot.message_handler(commands=['start'])
 @restricted
 def start(m):
-    bot.send_message(m.chat.id, text="Hi ! Welcome to Libdrive Manager Bot !\n\nSend /help for More Info !", parse_mode=telegram.ParseMode.HTML)
+    uptime = get_readable_time((time.time() - botStartTime))
+    bot.send_message(m.chat.id, text="Hi ! Welcome to Libdrive Manager Bot !\n\n<b>I'm Alive Since : </b><code>" + uptime + "</code>\n\nSend /help for More Info !", parse_mode=telegram.ParseMode.HTML)
+
 
 @bot.message_handler(commands=['help'])
 @restricted
