@@ -24,22 +24,22 @@ Run Docker Container.. `docker run --name lmr-bot lmr-bot`
 
 ## Bot Commands
 
-`/start` Welcome Message !!
+`/start` - Welcome Message !!
 
-`/help` Get Instructions on How to Use to bot !!
+`/help` - Get Instructions on How to Use to bot !!
 
-`/rebuild` Rebuild Libdrive Metadata !!
+`/rebuild` - Rebuild Libdrive Metadata !!
 
 ## BotFather SetCommands
 
-`rebuild - To Rebuild the Metadata of your Libdrive.\
-accounts - To View Registered Accounts of your Libdrive.\
-addaccount - To Add an Account to Libdrive.\
-rmaccount - To Remove an Account from Libdrive.\
-categories - To View the Categories of your Libdrive.\
-config - To View The Configs of your Libdrive.\
-settings - To View the Settings of your Libdrive.\
-set - To change The Settings of your Libdrive.\
-ui - To View the UI Configuration of your Libdrive.\
-setui - To change The UI Settings of your Libdrive\
-speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)`
+    rebuild - To Rebuild the Metadata of your Libdrive.
+    accounts - To View Registered Accounts of your Libdrive.
+    addaccount - To Add an Account to Libdrive.
+    rmaccount - To Remove an Account from Libdrive.
+    categories - To View the Categories of your Libdrive.
+    config - To View The Configs of your Libdrive.
+    settings - To View the Settings of your Libdrive.
+    set - To change The Settings of your Libdrive.
+    ui - To View the UI Configuration of your Libdrive.
+    setui - To change The UI Settings of your Libdrive
+    speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
