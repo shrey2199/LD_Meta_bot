@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
- 
+
 import telegram
 import telebot
 import logging
@@ -8,6 +8,9 @@ import json
 import time
 from functools import wraps
 from random import *
+from speedtest import Speedtest
+from helpers.speedtest import speed_convert
+from helpers.uptime import get_readable_time
 
 # UPTIME
 
@@ -34,24 +37,6 @@ except:
 bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
-
-def get_readable_time(seconds: int) -> str:
-    result = ''
-    (days, remainder) = divmod(seconds, 86400)
-    days = int(days)
-    if days != 0:
-        result += f'{days}d'
-    (hours, remainder) = divmod(remainder, 3600)
-    hours = int(hours)
-    if hours != 0:
-        result += f'{hours}h'
-    (minutes, seconds) = divmod(remainder, 60)
-    minutes = int(minutes)
-    if minutes != 0:
-        result += f'{minutes}m'
-    seconds = int(seconds)
-    result += f'{seconds}s'
-    return result
 
 def restricted(func):
     @wraps(func)
@@ -86,7 +71,35 @@ def help(m):
         \n⚠️ <code>Do Not Use The "</code> /set <code>" Command For Accounts, Categories and UI Config.</code>
         \n/ui - <b>To View the UI Configuration of your Libdrive.</b>
         \n/setui - <b>To change The UI Settings of your Libdrive.</b>
+        \n/speedtest - <b>To Perform a Speedtest on the Server. (Completely Irrelevant 😂)</b>
         """, parse_mode=telegram.ParseMode.HTML)
+
+@bot.message_handler(commands=['speedtest'])
+@restricted
+def speedtest(m):
+    test = Speedtest()
+    test.get_best_server()
+    dl = bot.send_message(m.chat.id, "<code>Checking Download Speeds ...</code>", parse_mode=telegram.ParseMode.HTML)
+    test.download()
+    ul = bot.edit_message_text("<code>Checking Upload Speeds ...</code>", chat_id=m.chat.id, message_id=dl.message_id, parse_mode=telegram.ParseMode.HTML)
+    test.upload()
+    test.results.share()
+    result = test.results.dict()
+    path = (result["share"])
+    string_speed = f'''
+    <b>Server :</b>
+    <b>Name:</b> <code>{result['server']['name']}</code>
+    <b>Country:</b> <code>{result['server']['country']}, {result['server']['cc']}</code>
+    <b>Sponsor:</b> <code>{result['server']['sponsor']}</code>
+    <b>ISP:</b> <code>{result['client']['isp']}</code>
+
+<b>SpeedTest Results :</b>
+    <b>Upload:</b> <code>{speed_convert(result['upload'] / 8)}</code>
+    <b>Download:</b>  <code>{speed_convert(result['download'] / 8)}</code>
+    <b>Ping:</b> <code>{result['ping']} ms</code>
+    <b>ISP Rating:</b> <code>{result['client']['isprating']}</code>
+    '''
+    st = bot.edit_message_text(str(string_speed), chat_id=m.chat.id, message_id=ul.message_id, parse_mode=telegram.ParseMode.HTML)
 
 @bot.message_handler(commands=['rebuild'])
 @restricted
@@ -456,4 +469,4 @@ def setui(m):
         except:
             bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
 
-bot.polling(none_stop=True, timeout=3600)
+bot.polling(none_stop=True, timeout=999999)
