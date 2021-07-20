@@ -32,6 +32,8 @@ Run Docker Container.. `docker run --name lmr-bot lmr-bot`
 
 ## BotFather SetCommands
 
+    start - To Start The Bot.
+    help - To Get Help about Using the Bot.
     rebuild - To Rebuild the Metadata of your Libdrive.
     accounts - To View Registered Accounts of your Libdrive.
     addaccount - To Add an Account to Libdrive.
