@@ -292,23 +292,90 @@ def categories(m):
 @restricted
 def config(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
-    
     try:
         r = requests.get(url)
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
             config = res["content"]
-            ConSgoogle = "✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
-            bot.send_message(m.chat.id, text="<b>Google Credentials :-</b>\n\n" + str(ConSgoogle) , parse_mode=telegram.ParseMode.HTML)
-            ConSothers = "✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Kill Switch :</b> <code>" + str(config["kill_switch"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
-            bot.send_message(m.chat.id, text="<b>Website Configs :-</b>\n\n" + str(ConSothers) , parse_mode=telegram.ParseMode.HTML)
-            ConSsite = "✯ <b> Title :</b> <code>" + str(config["ui_config"]["title"]) + "</code>\n\n" + "✯ <b> Icon :</b> <code>" + str(config["ui_config"]["icon"]) + "</code>\n\n" + "✯ <b> Page Range :</b> <code>" + str(config["ui_config"]["range"]) + "</code>\n\n"
-            bot.send_message(m.chat.id, text="<b>Website Configs :-</b>\n\n" + str(ConSsite) , parse_mode=telegram.ParseMode.HTML)
-            
+            global ConSgoogle
+            ConSgoogle = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
+            global ConSothers
+            ConSothers = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Kill Switch :</b> <code>" + str(config["kill_switch"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
+            global ConSsite
+            ConSsite = "<b>Website Configs :-</b>\n\n✯ <b> Title :</b> <code>" + str(config["ui_config"]["title"]) + "</code>\n\n" + "✯ <b> Icon :</b> <code>" + str(config["ui_config"]["icon"]) + "</code>\n\n" + "✯ <b> Page Range :</b> <code>" + str(config["ui_config"]["range"]) + "</code>\n\n"
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+                telebot.types.InlineKeyboardButton('Server Configs', callback_data='1')
+            )
+            ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change to Config using : /set <code>key</code> <code>value</code></b>'
+            global configs
+            configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)    
         else:
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
         bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+
+@bot.callback_query_handler(func=lambda call: True)
+def iq_callback(query):
+    global data
+    data = query.data
+    get_callback(query)
+
+def get_callback(query):
+   bot.answer_callback_query(query.id)
+   update_message(query.message)
+
+def update_message(m):
+    if data == '1' or data == '2' or data == '3':
+        if data == '1':
+            pg = ConSgoogle
+        if data == '2':
+            pg = ConSothers
+        if data == '3':
+            pg = ConSsite
+        bot.edit_message_text(pg,
+            m.chat.id, message_id=configs.message_id,
+            reply_markup=update_keyboard(pg),
+            parse_mode='HTML'
+        )
+    else:
+        bot.delete_message(m.chat.id, message_id=configs.message_id)
+    
+
+def update_keyboard(pg):
+    if data == '1':
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='3'),
+            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='2')
+        )
+        return keyboard
+    elif data == '2':
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='1'),
+            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='3')
+        )
+        return keyboard
+    elif data == '3':
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='2'),
+            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='1')
+        )
+        return keyboard
+    else:
+        pass
+    
+@bot.callback_query_handler(func=lambda call: True)
+def iq_callback(query):
+    global data
+    data = query.data
+    get_callback(query)
 
 @bot.message_handler(commands=['settings'])
 @restricted
