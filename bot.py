@@ -24,6 +24,7 @@ BOT_TOKEN = Config.BOT_TOKEN
 LD_DOMAIN = Config.LD_DOMAIN
 SECRET = Config.SECRET
 ADMIN_IDS = Config.ADMIN_IDS
+PIC = Config.PIC
 
 # BOT CODE
 
@@ -49,11 +50,15 @@ def restricted(func):
         return func(update, *args, **kwargs)
     return wrapped
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start','hi'])
 @restricted
 def start(m):
     uptime = get_readable_time((time.time() - botStartTime))
-    bot.send_message(m.chat.id, text="Hi ! Welcome to Libdrive Manager Bot !\n\n<b>I'm Alive Since : </b><code>" + uptime + "</code>\n\nSend /help for More Info !", parse_mode=telegram.ParseMode.HTML)
+    start_string = "Hi ! Welcome to Libdrive Manager Bot !\n\n<b>I'm Alive Since : </b><code>" + uptime + "</code>\n\nSend /help for More Info !"
+    if len(PIC) != 0:
+        bot.send_photo(m.chat.id, PIC, caption = start_string, parse_mode=telegram.ParseMode.HTML)
+    else:
+        bot.send_message(m.chat.id, start_string, parse_mode=telegram.ParseMode.HTML)
 
 
 @bot.message_handler(commands=['help'])
@@ -99,7 +104,10 @@ def speedtest(m):
     <b>Ping:</b> <code>{result['ping']} ms</code>
     <b>ISP Rating:</b> <code>{result['client']['isprating']}</code>
     '''
-    st = bot.edit_message_text(str(string_speed), chat_id=m.chat.id, message_id=ul.message_id, parse_mode=telegram.ParseMode.HTML)
+    
+    bot.send_photo(m.chat.id, path, caption = string_speed, parse_mode=telegram.ParseMode.HTML)
+    bot.delete_message(chat_id=m.chat.id, message_id=ul.message_id)
+    
 
 @bot.message_handler(commands=['rebuild'])
 @restricted

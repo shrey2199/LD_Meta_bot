@@ -6,21 +6,49 @@
 
 # Libdrive Manager Bot (LMR-Bot)
 
+## Deploy on Heroku
+
+Use The Deploy to Heroku Button given at the TOP !!
+
+Enter the Relevant Configurations and Deploy !!
+
 ## Run Locally
 
-Installing Requirements.. `pip install -r requirements.txt`
+Installing Requirements.. 
 
-Then Edit config.py
+    pip install -r requirements.txt
 
-And then run the bot by `python3 bot.py`
+Then Edit config.py with variables listed below !
+
+And then run the bot by 
+
+    python3 bot.py
 
 ## Deploy with Docker
 
-Edit bot.py CONFIGS
+### Two Methods
 
-Build Docker Image.. `docker build . -t lmr-bot`
+#### Method 1
 
-Run Docker Container.. `docker run --name lmr-bot lmr-bot`
+Edit config.py with variables listed below !
+
+Build Docker Image.. 
+
+    docker build . -t libdrivebot
+
+Run Docker Container.. 
+
+    docker run --name libdrivebot libdrivebot
+
+#### Method 2
+
+Build Docker Image ..
+
+    docker build . -t libdrivebot
+
+Run The Docker Container and Define the Variables in One Command
+
+    docker run --name libdrivebot -e BOT_TOKEN="<your_bot_token>" -e LD_DOMAIN="<your_libdrive_domain>" -e SECRET="<your_libdrive_secret>" -e ADMIN_IDS="<chat_ids>" -e PIC="<picture_url>" -d libdrivebot
 
 ## Bot Commands
 
@@ -29,6 +57,30 @@ Run Docker Container.. `docker run --name lmr-bot lmr-bot`
 `/help` - Get Instructions on How to Use to bot !!
 
 `/rebuild` - Rebuild Libdrive Metadata !!
+
+## Variables
+
+- `BOT_TOKEN`
+  - Values :- Valid BOT TOKEN Obtained from Botfather.
+  - Default Value :- `"XXXXXXXXX:ABCDEFGHIJKLMNOPQRST"`
+  - Use :- To connect to Telegram as BOT.
+
+- `LD_DOMAIN`
+  - Values :- Domain of LibDrive Server.
+  - Default Value :- `<appname>.herokuapp.com`
+  - Use :- To connect to Libdrive.
+
+- `SECRET`
+  - Values :- Secret of LibDrive Server Settings - The Secret Key set in LibDrive Config.
+  - Default Value :- `""`
+  - Use :- To connect to Libdrive.
+
+- `ADMIN_IDS`
+  - Values :- It is a list of IDs of all the allowed groups and useres who can use this bot in private. 
+    - To supply multiple IDs in config.py seperate by comma ','. 
+    - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
+  - Default Value :- `[]` 
+  - Use :- Users and groups with ids here can use the bot.
 
 ## BotFather SetCommands
 

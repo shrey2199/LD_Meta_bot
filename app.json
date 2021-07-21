@@ -27,6 +27,10 @@
       "ADMIN_IDS": {
         "description": "The Telegram User ID of the Owner of the Bot. Get it by using /info in @MissRose_bot.",
         "required": false
+      },
+      "PIC": {
+        "description": "The Picture You want to appear when start command is used.",
+        "required": false
       }
     },
     "formation": {
