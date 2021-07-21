@@ -68,6 +68,8 @@ Run The Docker Container and Define the Variables in One Command
 - `LD_DOMAIN`
   - Values :- Domain of LibDrive Server.
   - Default Value :- `<appname>.herokuapp.com`
+    - Enter The Domain without the Protocols `https://` or `http://`
+    - Don't enter a `/` in the end of The Domain.
   - Use :- To connect to Libdrive.
 
 - `SECRET`
