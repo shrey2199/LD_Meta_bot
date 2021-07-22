@@ -217,7 +217,7 @@ def rmaccount(m):
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
         \n<b>To Remove an Account :-</b>
-        Send /addaccount <code>&lt;user&gt; &lt;pass&gt;</code>
+        Send /rmaccount <code>&lt;user&gt; &lt;pass&gt;</code>
         """, parse_mode=telegram.ParseMode.HTML)
     else:
         username = m.text.split()[1]
@@ -288,6 +288,101 @@ def categories(m):
     except:
         bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
 
+@bot.message_handler(commands=['addcategory'])
+@restricted
+def addcategory(m):
+    chat = m.text[12:]
+    if chat == "":
+        bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
+        \n<b>To Add a Category :-</b>
+        Send /addcategory <code>&lt;name&gt; &lt;folder_id&gt;</code>
+        
+        Use <b>_</b> to denote spaces in name.
+        Eg. Typing <code>MY_FOLDER</code> as <code>&lt;name&gt;</code> will create a category named <code>MY FOLDER</code>.
+        """, parse_mode=telegram.ParseMode.HTML)
+    else:
+        namecoded = m.text.split()[1]
+        name = namecoded.replace("_", " ")
+        folder_id = m.text.split()[2]
+        url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
+        try:
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('Movies', callback_data='movies'),
+                telebot.types.InlineKeyboardButton('TV Shows', callback_data='tv_shows')
+            )
+            catadddet = "<b>Category Details :-</b>\n\n<b>Name : </b>" + name + "\n<b>Folder ID : </b>" + folder_id + "\n\nNow Choose Category Type (<b>Within 15 seconds</b>) :-"
+            global catadd
+            catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML)
+            @bot.callback_query_handler(func=lambda call: True)
+            def iq_callback(query):
+                global catdata
+                catdata = query.data
+                get_callback(query)
+            
+            def get_callback(query):
+                bot.answer_callback_query(query.id)
+                update_message(query.message)
+
+            cataddS = "Adding Category <code>" + name + "</code> to Libdrive ...\n\n<code>This might take around 15-30 Seconds..."
+
+            def update_message(m):
+                global type_media
+                if catdata == 'movies':
+                    messg = cataddS
+                    type_media = "Movies"
+                elif catdata == 'tv_shows':
+                    messg = cataddS
+                    type_media = "TV Shows"
+                else:
+                    pass
+                global catadd2               
+                catadd2 = bot.edit_message_text(messg,
+                    m.chat.id, message_id=catadd.message_id,
+                    parse_mode=telegram.ParseMode.HTML)
+
+            r1 = requests.get(url)
+            res1 = r1.json()
+            conf = res1["content"]
+            confcat = res1["content"]["category_list"]
+
+            time.sleep(15)
+
+            category_dict = {"id": folder_id, "name": name, "type": str(type_media)}
+            
+            confcat.append(category_dict)
+
+            headers = {
+                'authority': LD_DOMAIN,
+                'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
+                'accept': 'application/json, text/plain, */*',
+                'sec-ch-ua-mobile': '?0',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+                'content-type': 'application/json;charset=UTF-8',
+                'origin': 'https://' + LD_DOMAIN,
+                'sec-fetch-site': 'same-origin',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-dest': 'empty',
+                'referer': 'https://' + LD_DOMAIN + '/settings',
+                'accept-language': 'en-US,en;q=0.9',
+            }
+
+            params = (
+                ('secret', SECRET),
+            )
+
+            data = json.dumps(conf)
+            
+            r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
+            res = r.json()
+            if res["code"] == 200 and res["success"] == True:
+                CatS="<b>Name :</b> <code>" + name + "</code>\n<b>Folder ID :</b> <code>" + folder_id + "</code>\n<b>Type :</b> <code>" + type_media + "</code>\n"
+                bot.edit_message_text("<b>Category Added Successfully :- </b>\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            else:
+                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+        except:
+            bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=catadd.message_id, parse_mode=telegram.ParseMode.HTML)
+
 @bot.message_handler(commands=['config'])
 @restricted
 def config(m):
@@ -310,72 +405,74 @@ def config(m):
             )
             ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change to Config using : /set <code>key</code> <code>value</code></b>'
             global configs
-            configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)    
+            configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+
+            @bot.callback_query_handler(func=lambda call: True)
+            def iq_callback(query):
+                global data
+                data = query.data
+                get_callback(query)
+
+            def get_callback(query):
+                bot.answer_callback_query(query.id)
+                update_message(query.message)
+
+            def update_message(m):
+                if data == '1' or data == '2' or data == '3':
+                    if data == '1':
+                        pg = ConSgoogle
+                    if data == '2':
+                        pg = ConSothers
+                    if data == '3':
+                        pg = ConSsite
+                    bot.edit_message_text(pg,
+                        m.chat.id, message_id=configs.message_id,
+                        reply_markup=update_keyboard(pg),
+                        parse_mode='HTML'
+                    )
+                else:
+                    bot.delete_message(m.chat.id, message_id=configs.message_id)
+    
+
+            def update_keyboard(pg):
+                if data == '1':
+                    keyboard = telebot.types.InlineKeyboardMarkup()
+                    keyboard.row(
+                        telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='3'),
+                        telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+                        telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='2')
+                    )
+                    return keyboard
+                elif data == '2':
+                    keyboard = telebot.types.InlineKeyboardMarkup()
+                    keyboard.row(
+                        telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='1'),
+                        telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+                        telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='3')
+                    )
+                    return keyboard
+                elif data == '3':
+                    keyboard = telebot.types.InlineKeyboardMarkup()
+                    keyboard.row(
+                        telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='2'),
+                        telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+                        telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='1')
+                    )
+                    return keyboard
+                else:
+                    pass
+    
+            @bot.callback_query_handler(func=lambda call: True)
+            def iq_callback(query):
+                global data
+                data = query.data
+                get_callback(query)
         else:
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
         bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
 
-@bot.callback_query_handler(func=lambda call: True)
-def iq_callback(query):
-    global data
-    data = query.data
-    get_callback(query)
 
-def get_callback(query):
-   bot.answer_callback_query(query.id)
-   update_message(query.message)
-
-def update_message(m):
-    if data == '1' or data == '2' or data == '3':
-        if data == '1':
-            pg = ConSgoogle
-        if data == '2':
-            pg = ConSothers
-        if data == '3':
-            pg = ConSsite
-        bot.edit_message_text(pg,
-            m.chat.id, message_id=configs.message_id,
-            reply_markup=update_keyboard(pg),
-            parse_mode='HTML'
-        )
-    else:
-        bot.delete_message(m.chat.id, message_id=configs.message_id)
-    
-
-def update_keyboard(pg):
-    if data == '1':
-        keyboard = telebot.types.InlineKeyboardMarkup()
-        keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='3'),
-            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='2')
-        )
-        return keyboard
-    elif data == '2':
-        keyboard = telebot.types.InlineKeyboardMarkup()
-        keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='1'),
-            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='3')
-        )
-        return keyboard
-    elif data == '3':
-        keyboard = telebot.types.InlineKeyboardMarkup()
-        keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='2'),
-            telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='1')
-        )
-        return keyboard
-    else:
-        pass
-    
-@bot.callback_query_handler(func=lambda call: True)
-def iq_callback(query):
-    global data
-    data = query.data
-    get_callback(query)
 
 @bot.message_handler(commands=['settings'])
 @restricted
