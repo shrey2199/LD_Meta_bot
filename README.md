@@ -3,6 +3,11 @@
     <img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200" />
   </a>
 </p>
+<p align="center">
+  <a href="https://t.me/libdrive_support">
+    <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" width="200" />
+  </a>
+</p>
 
 # Libdrive Manager Bot (LMR-Bot)
 
