@@ -50,14 +50,6 @@ Run The Docker Container and Define the Variables in One Command
 
     docker run --name libdrivebot -e BOT_TOKEN="<your_bot_token>" -e LD_DOMAIN="<your_libdrive_domain>" -e SECRET="<your_libdrive_secret>" -e ADMIN_IDS="<chat_ids>" -e PIC="<picture_url>" -d libdrivebot
 
-## Bot Commands
-
-`/start` - Welcome Message !!
-
-`/help` - Get Instructions on How to Use to bot !!
-
-`/rebuild` - Rebuild Libdrive Metadata !!
-
 ## Variables
 
 - `BOT_TOKEN`
@@ -77,6 +69,11 @@ Run The Docker Container and Define the Variables in One Command
   - Default Value :- `""`
   - Use :- To connect to Libdrive.
 
+- `PIC`
+  - Values :- The Picture You want to appear when start command is used.
+  - Default Value :- `""`
+  - Use :- Send Photo with `/start` command.
+
 - `ADMIN_IDS`
   - Values :- It is a list of IDs of all the allowed groups and useres who can use this bot in private. 
     - To supply multiple IDs in config.py seperate by comma ','. 
@@ -84,15 +81,26 @@ Run The Docker Container and Define the Variables in One Command
   - Default Value :- `[]` 
   - Use :- Users and groups with ids here can use the bot.
 
+## Bot Commands
+
+`/start` - Welcome Message !!
+
+`/help` - Get Instructions on How to Use to bot !!
+
 ## BotFather SetCommands
 
     start - To Start The Bot.
     help - To Get Help about Using the Bot.
     rebuild - To Rebuild the Metadata of your Libdrive.
+    assignid - To assign bot_id
+    unassignid - To remove bot_id
     accounts - To View Registered Accounts of your Libdrive.
     addaccount - To Add an Account to Libdrive.
     rmaccount - To Remove an Account from Libdrive.
+    rmaccid - To Remove an Account using bot_id
     categories - To View the Categories of your Libdrive.
+    addcategory - To Add a Category to Libdrive.
+    rmcategory - To Remove a Category from Libdrive.
     config - To View The Configs of your Libdrive.
     settings - To View the Settings of your Libdrive.
     set - To change The Settings of your Libdrive.
