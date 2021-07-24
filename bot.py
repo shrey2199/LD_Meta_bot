@@ -633,29 +633,49 @@ def rmcategory(m):
 @restricted
 def config(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
-    try:
-        r = requests.get(url)
-        res = r.json()
-        if res["code"] == 200 and res["success"] == True:
-            config = res["content"]
-            global ConSgoogle
-            ConSgoogle = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
-            global ConSothers
-            ConSothers = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Kill Switch :</b> <code>" + str(config["kill_switch"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
-            global ConSsite
-            ConSsite = "<b>Website Configs :-</b>\n\n✯ <b> Title :</b> <code>" + str(config["ui_config"]["title"]) + "</code>\n\n" + "✯ <b> Icon :</b> <code>" + str(config["ui_config"]["icon"]) + "</code>\n\n" + "✯ <b> Page Range :</b> <code>" + str(config["ui_config"]["range"]) + "</code>\n\n"
-            keyboard = telebot.types.InlineKeyboardMarkup()
-            keyboard.row(
-                telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-                telebot.types.InlineKeyboardButton('Server Configs', callback_data='1')
-            )
-            ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change to Config using : /set <code>key</code> <code>value</code></b>'
-            global configs
-            configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
-        else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
-    except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+    r = requests.get(url)
+    res = r.json()
+    config = res["content"]
+    if "ui_config" in config.keys():
+        try:
+            if res["code"] == 200 and res["success"] == True:
+                global ConSgoogle
+                ConSgoogle = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
+                global ConSothers
+                ConSothers = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Kill Switch :</b> <code>" + str(config["kill_switch"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
+                global ConSsite
+                ConSsite = "<b>Website Configs :-</b>\n\n✯ <b> Title :</b> <code>" + str(config["ui_config"]["title"]) + "</code>\n\n" + "✯ <b> Icon :</b> <code>" + str(config["ui_config"]["icon"]) + "</code>\n\n" + "✯ <b> Page Range :</b> <code>" + str(config["ui_config"]["range"]) + "</code>\n\n"
+                keyboard = telebot.types.InlineKeyboardMarkup()
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton('❌', callback_data='close'),
+                    telebot.types.InlineKeyboardButton('Server Configs', callback_data='1')
+                )
+                ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change to Config using : /set <code>key</code> <code>value</code></b>'
+                global configs
+                configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            else:
+                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+        except:
+            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+    else:
+        try:
+            if res["code"] == 200 and res["success"] == True:
+                global ConSgooglewui
+                ConSgooglewui = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
+                global ConSotherswui
+                ConSotherswui = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Kill Switch :</b> <code>" + str(config["kill_switch"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
+                keyboard = telebot.types.InlineKeyboardMarkup()
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton('❌', callback_data='closewui'),
+                    telebot.types.InlineKeyboardButton('Server Configs', callback_data='1wui')
+                )
+                ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change the Config using : /set <code>key</code> <code>value</code></b>'
+                global configswui
+                configswui = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            else:
+                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+        except:
+            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
 
 @bot.message_handler(commands=['settings'])
 @restricted
@@ -849,7 +869,18 @@ def update_message(m):
                 parse_mode=telegram.ParseMode.HTML)
         else:
             bot.delete_message(m.chat.id, message_id=configs.message_id)
-        
+    elif data == '1wui' or data == '2wui' or data == 'closewui':
+        if data == '1wui' or data == '2wui':  
+            if data == '1wui':
+                pg = ConSgooglewui
+            elif data == '2wui':
+                pg = ConSotherswui
+            bot.edit_message_text(pg,
+                m.chat.id, message_id=configswui.message_id,
+                reply_markup=update_keyboard(pg),
+                parse_mode=telegram.ParseMode.HTML)
+        else:
+            bot.delete_message(m.chat.id, message_id=configswui.message_id)
     elif data == 'movies' or data == 'tv_shows':
         global type_media
         global catadd2
@@ -884,25 +915,39 @@ def update_keyboard(pg):
     if data == '1':
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='3'),
+            telebot.types.InlineKeyboardButton('⬅️', callback_data='3'),
             telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='2')
+            telebot.types.InlineKeyboardButton('➡️', callback_data='2')
         )
         return keyboard
     elif data == '2':
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='1'),
+            telebot.types.InlineKeyboardButton('⬅️', callback_data='1'),
             telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='3')
+            telebot.types.InlineKeyboardButton('➡️', callback_data='3')
         )
         return keyboard
     elif data == '3':
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.row(
-            telebot.types.InlineKeyboardButton('⮜⮜⮜', callback_data='2'),
+            telebot.types.InlineKeyboardButton('⬅️', callback_data='2'),
             telebot.types.InlineKeyboardButton('❌', callback_data='close'),
-            telebot.types.InlineKeyboardButton('⮞⮞⮞', callback_data='1')
+            telebot.types.InlineKeyboardButton('➡️', callback_data='1')
+        )
+        return keyboard
+    elif data == '1wui':
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('❌', callback_data='closewui'),
+            telebot.types.InlineKeyboardButton('➡️', callback_data='2wui')
+        )
+        return keyboard
+    elif data == '2wui':
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('⬅️', callback_data='1wui'),
+            telebot.types.InlineKeyboardButton('❌', callback_data='closewui')
         )
         return keyboard
     elif data == 'instructions':
