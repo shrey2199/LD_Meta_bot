@@ -97,8 +97,9 @@ Run The Docker Container and Define the Variables in One Command
     start - To Start The Bot.
     help - To Get Help about Using the Bot.
     rebuild - To Rebuild the Metadata of your Libdrive.
-    assignid - To assign bot_id
-    unassignid - To remove bot_id
+    fixconfig - To Fix LibDrive Config.
+    assignid - To assign bot_id.
+    unassignid - To remove bot_id.
     accounts - To View Registered Accounts of your Libdrive.
     addaccount - To Add an Account to Libdrive.
     rmaccount - To Remove an Account from Libdrive.

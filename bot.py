@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from os import kill
 import telegram
 import telebot
 import logging
@@ -69,6 +70,7 @@ def help(m):
     global Helpstring
     Helpstring = """<b>This Bot will help you to Manage your Libdrive Server.</b>
     	\n/rebuild - <b>To Rebuild the Metadata of your Libdrive.</b>
+        \n/fixconfig - <b>To Fix the Config of Your LibDrive by Adding Missing Keys.</b>
         \n/assignid - <b>To Assign <code>bot_id</code> to All Accounts and Categories.</b>
         \n/unassignid - <b>To Remove <code>bot_id</code> from All Accounts and Categories.</b>
         \n/accounts - <b>To View Registered Accounts of your Libdrive.</b>
@@ -88,11 +90,12 @@ def help(m):
     global Inststring
     Inststring = """<b>Instructions for Using The Bot : </b>
     \n1. <code>Do Not Use The "</code> /set <code>" Command For Accounts, Categories and UI Config.</code>
-    \n2. <code>Before Using the Features of this Bot, Please Use The Command "</code> /assignid <code>" to assign Bot Identifiable IDs to your LibDrive Accounts and Categories.</code>
-    \n3. <code>Assigning these IDs is </code><b>Important for Full Fuctionality</b><code> of the Bot.</code>
-    \n4. <code>Using This command adds an element </code><b>bot_id</b><code> to your Accounts and Categories in LibDrive Config.</code>
-    \n5. <code>This will not affect any kind of functioning in your LibDrive.</code>
-    \n6. <code>These IDs can be removed from your LibDrive Config by using "</code> /unassignid <code>" Command.</code>
+    \n2. <code>Before Using The Bot, Please Use The Command "</code> /fixconfig <code>" to Fix the Config of Your LibDrive by Adding Missing Keys.</code> 
+    \n3. <code>Before Using the Features of this Bot, Please Use The Command "</code> /assignid <code>" to assign Bot Identifiable IDs to your LibDrive Accounts and Categories.</code>
+    \n4. <code>Assigning these IDs is </code><b>Important for Full Fuctionality</b><code> of the Bot.</code>
+    \n5. <code>Using This command adds an element </code><b>bot_id</b><code> to your Accounts and Categories in LibDrive Config.</code>
+    \n6. <code>This will not affect any kind of functioning in your LibDrive.</code>
+    \n7. <code>These IDs can be removed from your LibDrive Config by using "</code> /unassignid <code>" Command.</code>
         """
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.row(
@@ -146,6 +149,83 @@ def rebuild(m):
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
         bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+
+@bot.message_handler(commands=['fixconfig'])
+@restricted
+def fixconfig(m):
+    url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
+    try:
+
+        fix = bot.send_message(m.chat.id, text="<code>Fixing Your LibDrive Config ...</code>", parse_mode=telegram.ParseMode.HTML)
+
+        r1 = requests.get(url)
+        res1 = r1.json()
+        conf = res1["content"]
+
+        # configs
+
+        kill_switch = {
+            "kill_switch":False
+            }
+        ui_config = {
+            "ui_config":{
+                "title":"libDrive", 
+                "icon":"https://avatars.githubusercontent.com/u/75073550?v=4", 
+                "range":"16"
+                }
+            }
+        prefer_mp4 = {"prefer_mp4":False}
+
+        if "ui_config" in conf.keys():
+            uiconf = conf["ui_config"]
+            if "title" in uiconf.keys() and "icon" in uiconf.keys() and "range" in uiconf.keys():
+                pass
+            if "title" not in uiconf.keys():
+                uiconf.update({"title":"libDrive"})
+            if "range" not in uiconf.keys():
+                uiconf.update({"range":16})
+            if "icon" not in uiconf.keys():
+                uiconf.update({"icon":"https://avatars.githubusercontent.com/u/75073550?v=4"})
+            else:
+                pass
+        if "ui_config" not in conf.keys():
+            conf.update(ui_config)
+        if "kill_switch" not in conf.keys():
+            conf.update(kill_switch)
+        if "prefer_mp4" not in conf.keys():
+            conf.update(prefer_mp4)
+        else:
+            pass
+
+        headers = {
+            'authority': LD_DOMAIN,
+            'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
+            'accept': 'application/json, text/plain, */*',
+            'sec-ch-ua-mobile': '?0',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+            'content-type': 'application/json;charset=UTF-8',
+            'origin': 'https://' + LD_DOMAIN,
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://' + LD_DOMAIN + '/settings',
+            'accept-language': 'en-US,en;q=0.9',
+        }
+
+        params = (
+            ('secret', SECRET),
+        )
+
+        data = json.dumps(conf)
+            
+        r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
+        res = r.json()
+        if res["code"] == 200 and res["success"] == True:
+            bot.edit_message_text("<b>Successfully Fixed Your LibDrive Config.</b>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+        else:
+            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+    except:
+        bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
 
 @bot.message_handler(commands=['assignid'])
 @restricted
