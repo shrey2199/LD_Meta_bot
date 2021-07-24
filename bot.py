@@ -533,7 +533,7 @@ def addcategory(m):
 
             for timex in range(1, 15):
                 bot.send_chat_action(m.chat.id, 'typing')
-                time.sleep(15)
+                time.sleep(1)
 
             category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_media)}
             
