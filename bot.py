@@ -1019,7 +1019,7 @@ def setui(m):
 @bot.message_handler(commands=['hrestart'])
 def hrestart(m):
     try:
-        restart = bot.send_message(m.chat.id, text="<code>Getting Dyno Stats ...</code>", parse_mode=telegram.ParseMode.HTML)
+        restart = bot.send_message(m.chat.id, text="<code>Restarting Dynos ...n\n\nPls Wait for 2-3 minutes for LibDrive to be Back...</code>", parse_mode=telegram.ParseMode.HTML)
 
         cmd = 'heroku dyno:restart web.1 -a ' + HEROKU_APP_NAME
         stream = os.popen(cmd)
