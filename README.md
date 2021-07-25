@@ -107,6 +107,7 @@ Run The Docker Container and Define the Variables in One Command
     categories - To View the Categories of your Libdrive.
     addcategory - To Add a Category to Libdrive.
     rmcategory - To Remove a Category from Libdrive.
+    setanilist - To Set/Change Anilist of Category.
     config - To View The Configs of your Libdrive.
     settings - To View the Settings of your Libdrive.
     set - To change The Settings of your Libdrive.

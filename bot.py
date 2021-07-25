@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from os import kill
 import telegram
 import telebot
 import logging
@@ -80,6 +79,7 @@ def help(m):
         \n/categories - <b>To View the Categories of your Libdrive.</b>
         \n/addcategory - <b>To Add a Category to Libdrive.</b>
         \n/rmcategory - <b>To Remove a Category from Libdrive.</b>
+        \n/setanilist - <b>To Set/Change Anilist Config of a Category.</b>
         \n/config - <b>To View The Configs of your Libdrive.</b>
         \n/settings - <b>To View the Settings of your Libdrive.</b>
         \n/set - <b>To change The Settings of your Libdrive.</b>
@@ -560,11 +560,79 @@ def categories(m):
                 CatName=str(category["name"])
                 CatURL=f"https://{LD_DOMAIN}/browse/{CatName}"
                 CatS=CatS + str(CatN) + ". <b>" + str(category["name"]) + " :</b>\n    Type : <code>" + str(category["type"]) + "</code>\n    Folder ID : <code>" + str(category["id"]) + "</code>\n    To Delete : /rmcategory <code>" + str(category["bot_id"]) + "</code>\n    URL : <a href='" + str(CatURL) + "'>" + str(category["name"]) + "</a>\n"
+                if "anilist" in category.keys():
+                    CatS = CatS + "    Anilist : <code>" + str(category["anilist"]) + "</code>\n    To Change Anilist : /setanilist <code>" + str(category["bot_id"]) + "</code> <code>&lt;true/false&gt;</code>\n"
+                else:
+                    pass
             bot.send_message(m.chat.id, text="<b>Categories :-</b>\n\n" + str(CatS) , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
         else:
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
         bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+
+@bot.message_handler(commands=['setanilist'])
+@restricted
+def setanilist(m):
+    chat = m.text[11:]
+    if chat == "":
+        bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
+        \n<b>To Change Anilist :-</b>
+        Send /setanilist <code>&lt;id&gt; &lt;true/false&gt;</code>
+        \nGet Category's ID with /categories\n
+        """, parse_mode=telegram.ParseMode.HTML)
+    else:
+        id = m.text.split()[1]
+        value = m.text.split()[2]
+        url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
+        try:
+            r1 = requests.get(url)
+            res1 = r1.json()
+            conf = res1["content"]
+            confcat = res1["content"]["category_list"]
+            
+
+            for cat in confcat:
+                if cat["bot_id"] == id:
+                    name = cat["name"]
+                    if "anilist" in cat:
+                        prev = cat["anilist"]
+                        cat["anilist"] = value
+                        changeanilist = "Anilist Value changed for Category <code>" + str(name) + "</code>\n\nFrom <code>" + str(prev) + "</code> <b>→</b> <code>" + str(value) + "</code>"
+                    else:
+                        cat.update({"anilist":value})
+                        changeanilist = "Anilist Value set for Category <code>" + str(name) + "</code> to <code>" + str(value) + "</code>"
+                else:
+                    continue
+            
+            headers = {
+                'authority': LD_DOMAIN,
+                'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
+                'accept': 'application/json, text/plain, */*',
+                'sec-ch-ua-mobile': '?0',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+                'content-type': 'application/json;charset=UTF-8',
+                'origin': 'https://' + LD_DOMAIN,
+                'sec-fetch-site': 'same-origin',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-dest': 'empty',
+                'referer': 'https://' + LD_DOMAIN + '/settings',
+                'accept-language': 'en-US,en;q=0.9',
+            }
+
+            params = (
+                ('secret', SECRET),
+            )
+
+            data = json.dumps(conf)
+            
+            r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
+            res = r.json()
+            if res["code"] == 200 and res["success"] == True:
+                bot.send_message(m.chat.id, changeanilist , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            else:
+                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+        except:
+            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
 
 @bot.message_handler(commands=['addcategory'])
 @restricted
@@ -588,21 +656,16 @@ def addcategory(m):
             keyboard = telebot.types.InlineKeyboardMarkup()
             keyboard.row(
                 telebot.types.InlineKeyboardButton('Movies', callback_data='movies'),
-                telebot.types.InlineKeyboardButton('TV Shows', callback_data='tv_shows')
+                telebot.types.InlineKeyboardButton('TV Shows', callback_data='tv_shows'),
+            )
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('Anilist - Movies', callback_data='amovies'),
+                telebot.types.InlineKeyboardButton('Anilist - TV Shows', callback_data='atv_shows')
             )
             catadddet = "<b>Category Details :-</b>\n\n<b>Name : </b>" + name + "\n<b>Folder ID : </b>" + folder_id + "\n\nNow Choose Category Type (<b>Within 15 seconds</b>) :-"
             global catadd
             catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML)
-            @bot.callback_query_handler(func=lambda call: True)
-            def iq_callback(query):
-                global catdata
-                catdata = query.data
-                get_callback(query)
             
-            def get_callback(query):
-                bot.answer_callback_query(query.id)
-                update_message(query.message)
-
             global cataddS
             cataddS = "Adding Category <code>" + name + "</code> to Libdrive ...\n\n<code>This might take around 15-30 Seconds...</code>"
 
@@ -615,7 +678,32 @@ def addcategory(m):
                 bot.send_chat_action(m.chat.id, 'typing')
                 time.sleep(1)
 
-            category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_media)}
+            if type_media=='movies' or type_media=='tv_shows':
+                if type_media=='movies':
+                    type_cat = 'Movies'
+                if type_media=='tv_shows':
+                    type_cat = 'TV Shows'
+                else:
+                    pass
+            if type_media=='amovies' or type_media=='atv_shows':
+                anilist = True
+                if type_media=='amovies':
+                    type_cat = 'Movies'
+                if type_media=='atv_shows':
+                    type_cat = 'TV Shows'
+                else:
+                    pass
+            else:
+                pass
+
+            category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_cat)}
+            CatS="<b>Name :</b> <code>" + name + "</code>\n<b>Folder ID :</b> <code>" + folder_id + "</code>\n<b>Type :</b> <code>" + type_cat + "</code>\n"
+
+            if anilist==True:
+                category_dict.update({"anilist":True})
+                CatS = CatS + "<b>Anilist :</b> <code>" + "True" + "</code>\n"
+            else:
+                pass
             
             confcat.append(category_dict)
 
@@ -643,7 +731,6 @@ def addcategory(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                CatS="<b>Name :</b> <code>" + name + "</code>\n<b>Folder ID :</b> <code>" + folder_id + "</code>\n<b>Type :</b> <code>" + type_media + "</code>\n"
                 bot.edit_message_text("<b>Category Added Successfully :- </b>\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
             else:
                 bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
@@ -653,12 +740,12 @@ def addcategory(m):
 @bot.message_handler(commands=['rmcategory'])
 @restricted
 def rmcategory(m):
-    chat = m.text[7:]
+    chat = m.text[11:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
         \n<b>To Remove a Category :-</b>
         Send /rmcategory <code>&lt;id&gt;</code>
-        \nGet Category's ID with /categories\nPlease Send /assignid to the bot 
+        \nGet Category's ID with /categories\n
         """, parse_mode=telegram.ParseMode.HTML)
     else:
         id = m.text.split()[1]
@@ -947,8 +1034,10 @@ def update_message(m):
                 m.chat.id, message_id=configs.message_id,
                 reply_markup=update_keyboard(pg),
                 parse_mode=telegram.ParseMode.HTML)
-        else:
+        elif data == 'close':
             bot.delete_message(m.chat.id, message_id=configs.message_id)
+        else:
+            pass
     elif data == '1wui' or data == '2wui' or data == 'closewui':
         if data == '1wui' or data == '2wui':  
             if data == '1wui':
@@ -959,9 +1048,11 @@ def update_message(m):
                 m.chat.id, message_id=configswui.message_id,
                 reply_markup=update_keyboard(pg),
                 parse_mode=telegram.ParseMode.HTML)
-        else:
+        elif data == 'closewui':
             bot.delete_message(m.chat.id, message_id=configswui.message_id)
-    elif data == 'movies' or data == 'tv_shows':
+        else:
+            pass
+    elif data == 'movies' or data == 'tv_shows' or data == 'amovies' or data == 'atv_shows':
         global type_media
         global catadd2
         if data == 'movies':
@@ -969,13 +1060,25 @@ def update_message(m):
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
                 parse_mode=telegram.ParseMode.HTML)
-            type_media = "Movies"
+            type_media = "movies"
         elif data == 'tv_shows':
             messg = cataddS               
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
                 parse_mode=telegram.ParseMode.HTML)
-            type_media = "TV Shows"
+            type_media = "tv_shows"
+        elif data == 'amovies':
+            messg = cataddS          
+            catadd2 = bot.edit_message_text(messg,
+                m.chat.id, message_id=catadd.message_id,
+                parse_mode=telegram.ParseMode.HTML)
+            type_media = "amovies"
+        elif data == 'atv_shows':
+            messg = cataddS          
+            catadd2 = bot.edit_message_text(messg,
+                m.chat.id, message_id=catadd.message_id,
+                parse_mode=telegram.ParseMode.HTML)
+            type_media = "atv_shows"
     elif data == 'instructions' or data == 'help' or data == 'closehelp':
         if data == 'instructions' or data == 'help':
             if data == 'instructions':
@@ -986,8 +1089,10 @@ def update_message(m):
                 m.chat.id, message_id=HelpMessage.message_id,
                 reply_markup=update_keyboard(pg),
                 parse_mode='HTML')
+        elif data == 'closehelp':
+            bot.delete_message(m.chat.id, message_id=HelpMessage.message_id)
         else:
-            bot.delete_message(m.chat.id, message_id=HelpMessage.message_id)        
+            pass  
     else:
         pass
     
