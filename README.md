@@ -9,7 +9,7 @@
   </a>
 </p>
 
-# Libdrive Manager Bot (LMR-Bot)
+# Libdrive Manager Bot
 
 ## Deploy on Heroku
 
