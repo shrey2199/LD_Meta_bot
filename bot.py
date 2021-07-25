@@ -1018,21 +1018,13 @@ def setui(m):
 
 @bot.message_handler(commands=['hrestart'])
 def hrestart(m):
-    url = "https://api.heroku.com/apps/" + HEROKU_APP_NAME + "/dynos/web.1"
     try:
-        headers = {
-            "accept":"application/vnd.heroku+json; version=3",
-            "authorization":"Bearer " + HEROKU_API_KEY,
-            "content-type":"application/json"
-        }
-        restart = bot.send_message(m.chat.id, "`Restarting Dyno...`", parse_mode=telegram.ParseMode.MARKDOWN)
-        r = requests.delete(url, headers=headers)
-        res = str(r)
-        if res == "<Response [202]>":
-            print("Restarted Successfully")
-            bot.edit_message_text("`Dyno Restarted Successfully...`", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
-        else:
-            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.HTML)
+        restart = bot.send_message(m.chat.id, text="<code>Getting Dyno Stats ...</code>", parse_mode=telegram.ParseMode.HTML)
+
+        cmd = 'heroku dyno:restart web.1 -a ' + HEROKU_APP_NAME
+        stream = os.popen(cmd)
+        output = stream.readlines()
+
     except:
         bot.edit_message_text("<code>Heroku Not Accessible !!</code>", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.HTML)
 
@@ -1045,7 +1037,7 @@ def hdyno(m):
         stream = os.popen(cmd)
         output = stream.readlines()
 
-        res = "<b>Heroku Dyno STATS :-</b>\n\n" + output[0] + "\n" + output[1] + "\n" + output[3]
+        res = "<b>Heroku Dyno STATS :-</b>\n\n" + output[0] + "\n" + output[1] + "\n" + output[6]
         print(res)
         
         bot.edit_message_text(res, m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.HTML)
