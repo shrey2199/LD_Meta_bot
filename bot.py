@@ -4,6 +4,7 @@ import telegram
 import telebot
 import logging
 import requests
+import os
 import json
 import time
 from functools import wraps
@@ -25,6 +26,8 @@ LD_DOMAIN = Config.LD_DOMAIN
 SECRET = Config.SECRET
 ADMIN_IDS = Config.ADMIN_IDS
 PIC = Config.PIC
+HEROKU_API_KEY = Config.HEROKU_API_KEY
+HEROKU_APP_NAME = Config.HEROKU_APP_NAME
 
 # BOT CODE
 
@@ -85,6 +88,8 @@ def help(m):
         \n/set - <b>To change The Settings of your Libdrive.</b>
         \n/ui - <b>To View the UI Configuration of your Libdrive.</b>
         \n/setui - <b>To change The UI Settings of your Libdrive.</b>
+        \n/hrestart - <b>To Restart Heroku Dynos. (Only Heroku Deploys)</b>
+        \n/hdyno - <b>To View Heroku Dyno Stats. (Only Heroku Deploys)</b>
         \n/speedtest - <b>To Perform a Speedtest on the Server. (Completely Irrelevant 😂)</b>
         """
     global Inststring
@@ -1010,6 +1015,42 @@ def setui(m):
                 bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
         except:
             bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+
+@bot.message_handler(commands=['hrestart'])
+def hrestart(m):
+    url = "https://api.heroku.com/apps/" + HEROKU_APP_NAME + "/dynos/web.1"
+    try:
+        headers = {
+            "accept":"application/vnd.heroku+json; version=3",
+            "authorization":"Bearer " + HEROKU_API_KEY,
+            "content-type":"application/json"
+        }
+        restart = bot.send_message(m.chat.id, "`Restarting Dyno...`", parse_mode=telegram.ParseMode.MARKDOWN)
+        r = requests.delete(url, headers=headers)
+        res = str(r)
+        if res == "<Response [202]>":
+            print("Restarted Successfully")
+            bot.edit_message_text("`Dyno Restarted Successfully...`", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+        else:
+            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.HTML)
+    except:
+        bot.edit_message_text("<code>Heroku Not Accessible !!</code>", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.HTML)
+
+@bot.message_handler(commands=['hdyno'])
+def hdyno(m):
+    try:
+        dyno = bot.send_message(m.chat.id, text="<code>Getting Dyno Stats ...</code>", parse_mode=telegram.ParseMode.HTML)
+
+        cmd = 'heroku ps -a ' + HEROKU_APP_NAME
+        stream = os.popen(cmd)
+        output = stream.readlines()
+
+        res = "<b>Heroku Dyno STATS :-</b>\n\n" + output[0] + "\n" + output[1] + "\n" + output[3]
+        print(res)
+        
+        bot.edit_message_text(res, m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.HTML)
+    except:
+        bot.edit_message_text("<code>Heroku Not Accessible !!</code>", m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.HTML)
 
 @bot.callback_query_handler(func=lambda call: True)
 def iq_callback(query):

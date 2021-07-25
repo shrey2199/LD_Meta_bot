@@ -31,6 +31,18 @@
       "PIC": {
         "description": "The Picture You want to appear when start command is used.",
         "required": false
+      },
+      "HEROKU_APP_NAME": {
+        "description": "The Name Of Heroku This App.",
+        "required": false
+      },
+      "HEROKU_API_KEY": {
+        "description": "The API Key of This Heroku Account.",
+        "required": false
+      },
+      "HEROKU_EMAIL": {
+        "description": "The Email ID of This Heroku Account.",
+        "required": false
       }
     },
     "formation": {

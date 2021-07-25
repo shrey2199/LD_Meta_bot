@@ -86,6 +86,21 @@ Run The Docker Container and Define the Variables in One Command
   - Default Value :- `[]` 
   - Use :- Users and groups with ids here can use the bot.
 
+- `HEROKU_APP_NAME`
+  - Values :- The Name of Your Heroku App.
+  - Default Value :- `""`
+  - Use :- To Use `/hrestart` and `/hdyno` command.
+
+- `HEROKU_API_KEY`
+  - Values :- The API KEY of Your Heroku Account.
+  - Default Value :- `""`
+  - Use :- To Use `/hrestart` and `/hdyno` command.
+
+- `HEROKU_EMAIL`
+  - Values :- The Email ID of Your Heroku Account.
+  - Default Value :- `""`
+  - Use :- To Use `/hrestart` and `/hdyno` command.
+
 ## Bot Commands
 
 `/start` - Welcome Message !!
@@ -112,5 +127,7 @@ Run The Docker Container and Define the Variables in One Command
     settings - To View the Settings of your Libdrive.
     set - To change The Settings of your Libdrive.
     ui - To View the UI Configuration of your Libdrive.
-    setui - To change The UI Settings of your Libdrive
+    setui - To change The UI Settings of your Libdrive.
+    hrestart - Restart Heroku Dynos.(Heroku Only)
+    hdyno - Get Heroku Dyno Stats.(Heroku Only)
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
