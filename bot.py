@@ -7,6 +7,7 @@ import requests
 import os
 import json
 import time
+import heroku3
 from functools import wraps
 from random import *
 from speedtest import Speedtest
@@ -41,6 +42,14 @@ except:
 bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
+
+CHAT_IDS = ADMIN_IDS.split()
+
+for i in CHAT_IDS:
+    if len(i) != 0 and i.isnumeric() == True:
+        bot.send_message(int(i), "`Hey ! The Bot Is Up and Running !`", parse_mode=telegram.ParseMode.MARKDOWN)
+    else:
+        pass
 
 allchar = "abcdefghijklmnopqrstuvwxyz0123456789"
 
@@ -684,6 +693,7 @@ def addcategory(m):
                 time.sleep(1)
 
             if type_media=='movies' or type_media=='tv_shows':
+                anilist = False
                 if type_media=='movies':
                     type_cat = 'Movies'
                 if type_media=='tv_shows':
