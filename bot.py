@@ -561,24 +561,34 @@ def rmaccid(m):
 @restricted
 def categories(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
-    
     try:
-        r = requests.get(url)
-        res = r.json()
-        if res["code"] == 200 and res["success"] == True:
-            CatL = res["content"]["category_list"]
-            CatS = ""
-            CatN = 0
-            for category in CatL:
-                CatN+=1
-                CatName=str(category["name"])
-                CatURL=f"https://{LD_DOMAIN}/browse/{CatName}"
-                CatS=CatS + str(CatN) + ". <b>" + str(category["name"]) + " :</b>\n    Type : <code>" + str(category["type"]) + "</code>\n    Folder ID : <code>" + str(category["id"]) + "</code>\n    To Delete : /rmcategory <code>" + str(category["bot_id"]) + "</code>\n    URL : <a href='" + str(CatURL) + "'>" + str(category["name"]) + "</a>\n"
-                if "anilist" in category.keys():
-                    CatS = CatS + "    Anilist : <code>" + str(category["anilist"]) + "</code>\n    To Change Anilist : /setanilist <code>" + str(category["bot_id"]) + "</code> <code>&lt;true/false&gt;</code>\n"
-                else:
-                    pass
-            bot.send_message(m.chat.id, text="<b>Categories :-</b>\n\n" + str(CatS) , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+        r1 = requests.get(url)
+        r2 = requests.get(url)
+        res1 = r1.json()
+        res2 = r2.json()
+        if res1["code"] == 200 and res1["success"] == True and res2["code"] == 200 and res2["success"] == True:
+            global conf
+            conf = res1["content"]
+            global CatL
+            CatL = res1["content"]["category_list"]
+            global CatC
+            CatC = res2["content"]["category_list"]
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            CatNum = 0
+            CatSer = "cat"
+            for category in CatC:
+                CatName = category["name"]
+                CatNum+=1
+                CatSerial = CatSer + str(CatNum)
+                category.update({"cats":CatSerial, "delete":"delete"+CatSerial})
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton(CatName, callback_data=CatSerial)
+                )
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
+            )
+            global categories
+            categories = bot.send_message(m.chat.id, text="<b>Categories :-</b>" , parse_mode=telegram.ParseMode.HTML, reply_markup=keyboard, disable_web_page_preview=True)
         else:
             bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
     except:
@@ -1063,6 +1073,104 @@ def iq_callback(query):
 def get_callback(query):
    bot.answer_callback_query(query.id)
    update_message(query.message)
+   action_keyboard(query.message)
+   
+def action_keyboard(m):
+    if data == "back":
+        action_listcategory(m)
+    elif str(data).startswith("delete"):
+        global category
+        for category in CatC:
+            if data == category["delete"]:
+                global bot_id
+                bot_id = category["bot_id"]
+                for delcat in CatL:
+                    if delcat["bot_id"]==bot_id:
+                        CatL.remove(delcat)
+                    else:
+                        pass
+            else:
+                continue
+        action_category("delete", m)
+
+def action_category(action, m):
+    if action == "delete":
+        try:
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            keyboard.row(
+                telebot.types.InlineKeyboardButton("Back To Categories", callback_data='back')
+            )
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
+            )
+
+            headers = {
+                'authority': LD_DOMAIN,
+                'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
+                'accept': 'application/json, text/plain, */*',
+                'sec-ch-ua-mobile': '?0',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+                'content-type': 'application/json;charset=UTF-8',
+                'origin': 'https://' + LD_DOMAIN,
+                'sec-fetch-site': 'same-origin',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-dest': 'empty',
+                'referer': 'https://' + LD_DOMAIN + '/settings',
+                'accept-language': 'en-US,en;q=0.9',
+            }
+
+            params = (
+                ('secret', SECRET),
+            )
+
+            data = json.dumps(conf)
+            
+            r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
+            res = r.json()
+            if res["code"] == 200 and res["success"] == True:
+                CatS="<b>Name :</b> <code>" + category["name"] + "</code>\n<b>Type :</b> <code>" + category["type"] + "</code>"
+                CatB = "<b>Category with ID - </b><code>" + bot_id + "</code><b> Removed :- </b>\n\n"
+                bot.edit_message_text(CatB + CatS, m.chat.id, message_id=categories.message_id, reply_markup=update_keyboard(CatB), parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            else:
+                bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+        except:
+                bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+
+def action_listcategory(m):
+    url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
+    
+    try:
+        r1 = requests.get(url)
+        r2 = requests.get(url)
+        res1 = r1.json()
+        res2 = r2.json()
+        if res1["code"] == 200 and res1["success"] == True and res2["code"] == 200 and res2["success"] == True:
+            global conf
+            conf = res1["content"]
+            global CatL
+            CatL = res1["content"]["category_list"]
+            global CatC
+            CatC = res2["content"]["category_list"]
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            CatNum = 0
+            CatSer = "cat"
+            for category in CatC:
+                CatName = category["name"]
+                CatNum+=1
+                CatSerial = CatSer + str(CatNum)
+                category.update({"cats":CatSerial, "delete":"delete"+CatSerial})
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton(CatName, callback_data=CatSerial)
+                )
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
+            )
+            global categories
+            categories = bot.edit_message_text("<b>Categories :-</b>" , m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML, reply_markup=keyboard, disable_web_page_preview=True)
+        else:
+            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+    except:
+        bot.send_message("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
 
 def update_message(m):
     if data == '1' or data == '2' or data == '3' or data == 'close':
@@ -1136,6 +1244,25 @@ def update_message(m):
             bot.delete_message(m.chat.id, message_id=HelpMessage.message_id)
         else:
             pass  
+    elif data == "closecat":
+        bot.delete_message(
+            m.chat.id, message_id=categories.message_id
+        )
+    elif str(data).startswith("cat"):
+        pg = "<b>Category Configs :-</b>\n\n"
+        for category in CatC:
+            if data == category["cats"]:
+                if "anilist" in category.keys():
+                    pg = pg + "Name : <code>" + category["name"] + "</code>\nFolder ID : <code>" + category["id"] + "</code>\nType : <code>" + category["type"] + "</code>\nAnilist : <code>" + str(category["anilist"]) + "</code>\n"
+                else:
+                    pg = pg + "Name : <code>" + category["name"] + "</code>\nFolder ID : <code>" + category["id"] + "</code>\nType : <code>" + category["type"] + "</code>\n"
+                bot.edit_message_text(pg,
+                    m.chat.id, message_id=categories.message_id,
+                    reply_markup=update_keyboard(pg),
+                    parse_mode='HTML'
+                )
+            else:
+                pass
     else:
         pass
     
@@ -1192,6 +1319,39 @@ def update_keyboard(pg):
             telebot.types.InlineKeyboardButton('Instructions', callback_data='instructions')
         )
         return keyboard
+    elif data == "closecat":
+        pass
+    elif str(data).startswith("delete"):
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton("Back To Categories", callback_data="back")
+        )
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
+        )
+        return keyboard
+    elif str(data).startswith("cat"):    
+        for category in CatC:
+            if data == category["cats"]:
+                keyboard = telebot.types.InlineKeyboardMarkup()
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton("Name : "+category["name"], callback_data="name")
+                )
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton("Folder ID : "+category["id"], callback_data="folder_id")
+                )
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton("Delete Category", callback_data=category["delete"])
+                )
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton("Back To Categories", callback_data="back")
+                )
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
+                )
+                return keyboard
+            else:
+                pass
     else:
         pass
     

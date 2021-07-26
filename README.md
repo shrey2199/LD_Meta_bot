@@ -131,3 +131,7 @@ Run The Docker Container and Define the Variables in One Command
     hrestart - Restart Heroku Dynos.(Heroku Only)
     hdyno - Get Heroku Dyno Stats.(Heroku Only)
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
+
+## Credits
+
+- Thanks to [eliasbenb](https://github.com/libdrive), since he is the one who made [LibDrive](https://github.com/libdrive) in the first place.
