@@ -100,6 +100,7 @@ def help(m):
         \n/setui - *To change The UI Settings of your Libdrive.*
         \n/hrestart - *To Restart Heroku Dynos. (Only Heroku Deploys)*
         \n/hdyno - *To View Heroku Dyno Stats. (Only Heroku Deploys)*
+        \n/search - *To Search Libdrive and Get Direct Download Links.*
         \n/speedtest - *To Perform a Speedtest on the Server. (Completely Irrelevant 😂)*
         """
     global Inststring

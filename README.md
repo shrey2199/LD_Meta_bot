@@ -130,6 +130,7 @@ Run The Docker Container and Define the Variables in One Command
     setui - To change The UI Settings of your Libdrive.
     hrestart - Restart Heroku Dynos.(Heroku Only)
     hdyno - Get Heroku Dyno Stats.(Heroku Only)
+    search - To Search Your LibDrive.
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
 
 ## Credits
