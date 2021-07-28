@@ -82,6 +82,7 @@ def help(m):
     global Helpstring
     Helpstring = """*This Bot will help you to Manage your Libdrive Server.*
     	\n/rebuild - *To Rebuild the Metadata of your Libdrive.*
+        \n/restart - *To Restart LibDrive Server.*
         \n/fixconfig - *To Fix the Config of Your LibDrive by Adding Missing Keys.*
         \n/assignid - *To Assign `bot_id` to All Accounts and Categories.*
         \n/unassignid - *To Remove `bot_id` from All Accounts and Categories.*
@@ -161,6 +162,21 @@ def rebuild(m):
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
             bot.send_message(m.chat.id, text="`Metadata Rebuilt Successfully !!`", parse_mode=telegram.ParseMode.MARKDOWN)
+        else:
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
+    except:
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
+
+@bot.message_handler(commands=['restart'])
+@restricted
+def restart(m):
+    url = 'https://' + LD_DOMAIN + '/api/v1/restart?secret=' + SECRET
+    
+    try:
+        r = requests.get(url)
+        res = str(r)
+        if res == str("<Response [503]>"):
+            bot.send_message(m.chat.id, text="`LibDrive Restarted Successfully !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         else:
             bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:

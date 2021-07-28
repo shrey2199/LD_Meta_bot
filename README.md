@@ -111,6 +111,7 @@ Run The Docker Container and Define the Variables in One Command
 
     start - To Start The Bot.
     help - To Get Help about Using the Bot.
+    restart - To Restart LibdDrive Server.
     rebuild - To Rebuild the Metadata of your Libdrive.
     fixconfig - To Fix LibDrive Config.
     assignid - To assign bot_id.
