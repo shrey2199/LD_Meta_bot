@@ -3,3 +3,4 @@ pyTelegramBotAPI
 requests
 speedtest-cli
 heroku3
+telegraph
