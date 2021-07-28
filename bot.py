@@ -8,6 +8,7 @@ import os
 import json
 import time
 import heroku3
+from telegraph import Telegraph
 from functools import wraps
 from random import *
 from speedtest import Speedtest
@@ -68,48 +69,48 @@ def restricted(func):
 @restricted
 def start(m):
     uptime = get_readable_time((time.time() - botStartTime))
-    start_string = "Hi ! Welcome to Libdrive Manager Bot by <a href='telegram.me/s_rawal'>Shreyansh Rawal</a> !\n\n<b>I'm Alive Since : </b><code>" + uptime + "</code>\n\n ✯ <b>For More Info</b>, Send /help to the Bot !!\n\n ✯ <b>Also Read the Important Instructions</b> by clicking the Instructions Button in /help !!"
+    start_string = "Hi ! Welcome to Libdrive Manager Bot by [Shreyansh Rawal](telegram.me/s_rawal) !\n\n*I'm Alive Since : *`" + uptime + "`\n\n ✯ *For More Info*, Send /help to the Bot !!\n\n ✯ *Also Read the Important Instructions* by clicking the Instructions Button in /help !!"
     if len(PIC.replace(" ", "")) != 0:
-        bot.send_photo(m.chat.id, PIC, caption = start_string, parse_mode=telegram.ParseMode.HTML)
+        bot.send_photo(m.chat.id, PIC, caption = start_string, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        bot.send_message(m.chat.id, start_string, parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, start_string, parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 @bot.message_handler(commands=['help'])
 @restricted
 def help(m):
     global Helpstring
-    Helpstring = """<b>This Bot will help you to Manage your Libdrive Server.</b>
-    	\n/rebuild - <b>To Rebuild the Metadata of your Libdrive.</b>
-        \n/fixconfig - <b>To Fix the Config of Your LibDrive by Adding Missing Keys.</b>
-        \n/assignid - <b>To Assign <code>bot_id</code> to All Accounts and Categories.</b>
-        \n/unassignid - <b>To Remove <code>bot_id</code> from All Accounts and Categories.</b>
-        \n/accounts - <b>To View Registered Accounts of your Libdrive.</b>
-        \n/addaccount - <b>To Add an Account to Libdrive.</b>
-        \n/rmaccount - <b>To Remove an Account from Libdrive.</b>
-        \n/rmaccid - <b>To Remove an Account from Libdrive using id.</b>
-        \n/categories - <b>To View the Categories of your Libdrive.</b>
-        \n/addcategory - <b>To Add a Category to Libdrive.</b>
-        \n/rmcategory - <b>To Remove a Category from Libdrive.</b>
-        \n/setanilist - <b>To Set/Change Anilist Config of a Category.</b>
-        \n/config - <b>To View The Configs of your Libdrive.</b>
-        \n/settings - <b>To View the Settings of your Libdrive.</b>
-        \n/set - <b>To change The Settings of your Libdrive.</b>
-        \n/ui - <b>To View the UI Configuration of your Libdrive.</b>
-        \n/setui - <b>To change The UI Settings of your Libdrive.</b>
-        \n/hrestart - <b>To Restart Heroku Dynos. (Only Heroku Deploys)</b>
-        \n/hdyno - <b>To View Heroku Dyno Stats. (Only Heroku Deploys)</b>
-        \n/speedtest - <b>To Perform a Speedtest on the Server. (Completely Irrelevant 😂)</b>
+    Helpstring = """*This Bot will help you to Manage your Libdrive Server.*
+    	\n/rebuild - *To Rebuild the Metadata of your Libdrive.*
+        \n/fixconfig - *To Fix the Config of Your LibDrive by Adding Missing Keys.*
+        \n/assignid - *To Assign `bot_id` to All Accounts and Categories.*
+        \n/unassignid - *To Remove `bot_id` from All Accounts and Categories.*
+        \n/accounts - *To View Registered Accounts of your Libdrive.*
+        \n/addaccount - *To Add an Account to Libdrive.*
+        \n/rmaccount - *To Remove an Account from Libdrive.*
+        \n/rmaccid - *To Remove an Account from Libdrive using id.*
+        \n/categories - *To View the Categories of your Libdrive.*
+        \n/addcategory - *To Add a Category to Libdrive.*
+        \n/rmcategory - *To Remove a Category from Libdrive.*
+        \n/setanilist - *To Set/Change Anilist Config of a Category.*
+        \n/config - *To View The Configs of your Libdrive.*
+        \n/settings - *To View the Settings of your Libdrive.*
+        \n/set - *To change The Settings of your Libdrive.*
+        \n/ui - *To View the UI Configuration of your Libdrive.*
+        \n/setui - *To change The UI Settings of your Libdrive.*
+        \n/hrestart - *To Restart Heroku Dynos. (Only Heroku Deploys)*
+        \n/hdyno - *To View Heroku Dyno Stats. (Only Heroku Deploys)*
+        \n/speedtest - *To Perform a Speedtest on the Server. (Completely Irrelevant 😂)*
         """
     global Inststring
-    Inststring = """<b>Instructions for Using The Bot : </b>
-    \n1. <code>Do Not Use The "</code> /set <code>" Command For Accounts, Categories and UI Config.</code>
-    \n2. <code>Before Using The Bot, Please Use The Command "</code> /fixconfig <code>" to Fix the Config of Your LibDrive by Adding Missing Keys.</code> 
-    \n3. <code>Before Using the Features of this Bot, Please Use The Command "</code> /assignid <code>" to assign Bot Identifiable IDs to your LibDrive Accounts and Categories.</code>
-    \n4. <code>Assigning these IDs is </code><b>Important for Full Fuctionality</b><code> of the Bot.</code>
-    \n5. <code>Using This command adds an element </code><b>bot_id</b><code> to your Accounts and Categories in LibDrive Config.</code>
-    \n6. <code>This will not affect any kind of functioning in your LibDrive.</code>
-    \n7. <code>These IDs can be removed from your LibDrive Config by using "</code> /unassignid <code>" Command.</code>
+    Inststring = """*Instructions for Using The Bot : *
+    \n1. `Do Not Use The "` /set `" Command For Accounts, Categories and UI Config.`
+    \n2. `Before Using The Bot, Please Use The Command "` /fixconfig `" to Fix the Config of Your LibDrive by Adding Missing Keys.` 
+    \n3. `Before Using the Features of this Bot, Please Use The Command "` /assignid `" to assign Bot Identifiable IDs to your LibDrive Accounts and Categories.`
+    \n4. `Assigning these IDs is `*Important for Full Fuctionality*` of the Bot.`
+    \n5. `Using This command adds an element `*bot_id*` to your Accounts and Categories in LibDrive Config.`
+    \n6. `This will not affect any kind of functioning in your LibDrive.`
+    \n7. `These IDs can be removed from your LibDrive Config by using "` /unassignid `" Command.`
         """
     keyboard = telebot.types.InlineKeyboardMarkup()
     keyboard.row(
@@ -117,35 +118,35 @@ def help(m):
         telebot.types.InlineKeyboardButton('Instructions', callback_data='instructions')
     )
     global HelpMessage
-    HelpMessage = bot.send_message(m.chat.id, Helpstring, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+    HelpMessage = bot.send_message(m.chat.id, Helpstring, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 @bot.message_handler(commands=['speedtest'])
 @restricted
 def speedtest(m):
     test = Speedtest()
     test.get_best_server()
-    dl = bot.send_message(m.chat.id, "<code>Checking Download Speeds ...</code>", parse_mode=telegram.ParseMode.HTML)
+    dl = bot.send_message(m.chat.id, "`Checking Download Speeds ...`", parse_mode=telegram.ParseMode.MARKDOWN)
     test.download()
-    ul = bot.edit_message_text("<code>Checking Upload Speeds ...</code>", chat_id=m.chat.id, message_id=dl.message_id, parse_mode=telegram.ParseMode.HTML)
+    ul = bot.edit_message_text("`Checking Upload Speeds ...`", chat_id=m.chat.id, message_id=dl.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
     test.upload()
     test.results.share()
     result = test.results.dict()
     path = (result["share"])
     string_speed = f'''
-    <b>Server :</b>
-    <b>Name:</b> <code>{result['server']['name']}</code>
-    <b>Country:</b> <code>{result['server']['country']}, {result['server']['cc']}</code>
-    <b>Sponsor:</b> <code>{result['server']['sponsor']}</code>
-    <b>ISP:</b> <code>{result['client']['isp']}</code>
+    *Server :*
+    *Name:* `{result['server']['name']}`
+    *Country:* `{result['server']['country']}, {result['server']['cc']}`
+    *Sponsor:* `{result['server']['sponsor']}`
+    *ISP:* `{result['client']['isp']}`
 
-<b>SpeedTest Results :</b>
-    <b>Upload:</b> <code>{speed_convert(result['upload'] / 8)}</code>
-    <b>Download:</b>  <code>{speed_convert(result['download'] / 8)}</code>
-    <b>Ping:</b> <code>{result['ping']} ms</code>
-    <b>ISP Rating:</b> <code>{result['client']['isprating']}</code>
+*SpeedTest Results :*
+    *Upload:* `{speed_convert(result['upload'] / 8)}`
+    *Download:*  `{speed_convert(result['download'] / 8)}`
+    *Ping:* `{result['ping']} ms`
+    *ISP Rating:* `{result['client']['isprating']}`
     '''
     
-    bot.send_photo(m.chat.id, path, caption = string_speed, parse_mode=telegram.ParseMode.HTML)
+    bot.send_photo(m.chat.id, path, caption = string_speed, parse_mode=telegram.ParseMode.MARKDOWN)
     bot.delete_message(chat_id=m.chat.id, message_id=ul.message_id)
     
 
@@ -158,11 +159,11 @@ def rebuild(m):
         r = requests.get(url)
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
-            bot.send_message(m.chat.id, text="<code>Metadata Rebuilt Successfully !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Metadata Rebuilt Successfully !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['fixconfig'])
 @restricted
@@ -170,7 +171,7 @@ def fixconfig(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
     try:
 
-        fix = bot.send_message(m.chat.id, text="<code>Fixing Your LibDrive Config ...</code>", parse_mode=telegram.ParseMode.HTML)
+        fix = bot.send_message(m.chat.id, text="`Fixing Your LibDrive Config ...`", parse_mode=telegram.ParseMode.MARKDOWN)
 
         r1 = requests.get(url)
         res1 = r1.json()
@@ -235,11 +236,11 @@ def fixconfig(m):
         r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
-            bot.edit_message_text("<b>Successfully Fixed Your LibDrive Config.</b>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("*Successfully Fixed Your LibDrive Config.*", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
     except:
-        bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+        bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=fix.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 @bot.message_handler(commands=['assignid'])
 @restricted
@@ -249,7 +250,7 @@ def assignid(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
     try:
 
-        assign = bot.send_message(m.chat.id, text="<code>Assigning IDs ...</code>", parse_mode=telegram.ParseMode.HTML)
+        assign = bot.send_message(m.chat.id, text="`Assigning IDs ...`", parse_mode=telegram.ParseMode.MARKDOWN)
 
         r1 = requests.get(url)
         res1 = r1.json()
@@ -294,11 +295,11 @@ def assignid(m):
         r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
-            bot.edit_message_text("<b>Successfully Assigned IDs to all Accounts and Categories</b>", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("*Successfully Assigned IDs to all Accounts and Categories*", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
     except:
-        bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+        bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=assign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 @bot.message_handler(commands=['unassignid'])
 @restricted
@@ -306,7 +307,7 @@ def unassignid(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
     try:
 
-        unassign = bot.send_message(m.chat.id, text="<code>Deleting Assigned IDs ...</code>", parse_mode=telegram.ParseMode.HTML)
+        unassign = bot.send_message(m.chat.id, text="`Deleting Assigned IDs ...`", parse_mode=telegram.ParseMode.MARKDOWN)
 
         r1 = requests.get(url)
         res1 = r1.json()
@@ -349,11 +350,11 @@ def unassignid(m):
         r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
         res = r.json()
         if res["code"] == 200 and res["success"] == True:
-            bot.edit_message_text("<b>Successfully Deleted IDs of all Accounts and Categories</b>", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("*Successfully Deleted IDs of all Accounts and Categories*", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.edit_message_text("`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
     except:
-        bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+        bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=unassign.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 @bot.message_handler(commands=['accounts'])
 @restricted
@@ -370,15 +371,15 @@ def accounts(m):
             for account in AccL:
                 if "bot_id" in account.keys():
                     AccN+=1
-                    AccS=AccS + str(AccN) + ". <b>" + str(account["username"]) + " :</b> <code>" + str(account["auth"]) + "</code>\n    To Delete : /rmaccid <code>" + str(account["bot_id"]) + "</code>\n\n"
+                    AccS=AccS + str(AccN) + ". *" + str(account["username"]) + " :* `" + str(account["auth"]) + "`\n    To Delete : /rmaccid `" + str(account["bot_id"]) + "`\n\n"
                 else:
                     AccN+=1
-                    AccS=AccS + str(AccN) + ". <b>" + str(account["username"]) + " :</b> <code>" + str(account["auth"]) + "</code>\n\n"
-            bot.send_message(m.chat.id, text="<b>Registered Accounts :-</b>\n\n" + str(AccS) , parse_mode=telegram.ParseMode.HTML)
+                    AccS=AccS + str(AccN) + ". *" + str(account["username"]) + " :* `" + str(account["auth"]) + "`\n\n"
+            bot.send_message(m.chat.id, text="*Registered Accounts :-*\n\n" + str(AccS) , parse_mode=telegram.ParseMode.MARKDOWN)
         else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['addaccount'])
 @restricted
@@ -386,9 +387,9 @@ def addaccount(m):
     chat = m.text[11:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Add an Account :-</b>
-        Send /addaccount <code>&lt;user&gt; &lt;pass&gt; &lt;pic&gt;</code>
-        """, parse_mode=telegram.ParseMode.HTML)
+        \n*To Add an Account :-*
+        Send /addaccount `<user> <pass> <pic>`
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         bot_id = "".join(choice(allchar) for x in range(randint(8, 8)))
         username = m.text.split()[1]
@@ -437,12 +438,12 @@ def addaccount(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                AccS="<b>Username :</b> <code>" + username + "</code>\n<b>Password :</b> <code>" + password + "</code>\n<b>Auth :</b> <code>" + auth + "</code>\n<b>Pic :</b> <code>" + pic + "</code>\n"
-                bot.send_message(m.chat.id, text="<b>Account Added Successfully :- </b>\n\n" + AccS , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                AccS="*Username :* `" + username + "`\n*Password :* `" + password + "`\n*Auth :* `" + auth + "`\n*Pic :* `" + pic + "`\n"
+                bot.send_message(m.chat.id, text="*Account Added Successfully :- *\n\n" + AccS , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['rmaccount'])
 @restricted
@@ -450,9 +451,9 @@ def rmaccount(m):
     chat = m.text[10:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Remove an Account :-</b>
-        Send /rmaccount <code>&lt;user&gt; &lt;pass&gt;</code>
-        """, parse_mode=telegram.ParseMode.HTML)
+        \n*To Remove an Account :-*
+        Send /rmaccount `<user> <pass>`
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         username = m.text.split()[1]
         password = m.text.split()[2]
@@ -492,12 +493,12 @@ def rmaccount(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                AccS="<b>Username :</b> <code>" + username + "</code>\n<b>Password :</b> <code>" + password + "</code>"
-                bot.send_message(m.chat.id, text="<b>Account Removed Successfully :- </b>\n\n" + AccS , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                AccS="*Username :* `" + username + "`\n*Password :* `" + password + "`"
+                bot.send_message(m.chat.id, text="*Account Removed Successfully :- *\n\n" + AccS , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['rmaccid'])
 @restricted
@@ -505,10 +506,10 @@ def rmaccid(m):
     chat = m.text[8:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Remove an Account :-</b>
-        Send /rmaccid <code>&lt;id&gt;</code>
+        \n*To Remove an Account :-*
+        Send /rmaccid `<id>`
         \nGet Account's ID with /accounts
-        """, parse_mode=telegram.ParseMode.HTML)
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         id = m.text.split()[1]
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
@@ -550,12 +551,12 @@ def rmaccid(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                AccS="<b>Username :</b> <code>" + username + "</code>\n<b>Password :</b> <code>" + password + "</code>"
-                bot.send_message(m.chat.id, text="<b>Account with ID - </b><code>" + id + "</code><b> Removed Successfully :- </b>\n\n" + AccS , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                AccS="*Username :* `" + username + "`\n*Password :* `" + password + "`"
+                bot.send_message(m.chat.id, text="*Account with ID - *`" + id + "`* Removed Successfully :- *\n\n" + AccS , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['categories'])
 @restricted
@@ -588,11 +589,11 @@ def categories(m):
                 telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
             )
             global categories
-            categories = bot.send_message(m.chat.id, text="<b>Categories :-</b>" , parse_mode=telegram.ParseMode.HTML, reply_markup=keyboard, disable_web_page_preview=True)
+            categories = bot.send_message(m.chat.id, text="*Categories :-*" , parse_mode=telegram.ParseMode.MARKDOWN, reply_markup=keyboard, disable_web_page_preview=True)
         else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['setanilist'])
 @restricted
@@ -600,10 +601,10 @@ def setanilist(m):
     chat = m.text[11:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Change Anilist :-</b>
-        Send /setanilist <code>&lt;id&gt; &lt;true/false&gt;</code>
+        \n*To Change Anilist :-*
+        Send /setanilist `<id> <true/false>`
         \nGet Category's ID with /categories\n
-        """, parse_mode=telegram.ParseMode.HTML)
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         id = m.text.split()[1]
         value = m.text.split()[2]
@@ -621,10 +622,10 @@ def setanilist(m):
                     if "anilist" in cat:
                         prev = cat["anilist"]
                         cat["anilist"] = value
-                        changeanilist = "Anilist Value changed for Category <code>" + str(name) + "</code>\n\nFrom <code>" + str(prev) + "</code> <b>→</b> <code>" + str(value) + "</code>"
+                        changeanilist = "Anilist Value changed for Category `" + str(name) + "`\n\nFrom `" + str(prev) + "` *→* `" + str(value) + "`"
                     else:
                         cat.update({"anilist":value})
-                        changeanilist = "Anilist Value set for Category <code>" + str(name) + "</code> to <code>" + str(value) + "</code>"
+                        changeanilist = "Anilist Value set for Category `" + str(name) + "` to `" + str(value) + "`"
                 else:
                     continue
             
@@ -652,11 +653,11 @@ def setanilist(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                bot.send_message(m.chat.id, changeanilist , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                bot.send_message(m.chat.id, changeanilist , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['addcategory'])
 @restricted
@@ -664,12 +665,12 @@ def addcategory(m):
     chat = m.text[12:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Add a Category :-</b>
-        Send /addcategory <code>&lt;name&gt; &lt;folder_id&gt;</code>
+        \n*To Add a Category :-*
+        Send /addcategory `<name> <folder_id>`
         
-        Use <b>_</b> to denote spaces in name.
-        Eg. Typing <code>MY_FOLDER</code> as <code>&lt;name&gt;</code> will create a category named <code>MY FOLDER</code>.
-        """, parse_mode=telegram.ParseMode.HTML)
+        Use *_* to denote spaces in name.
+        Eg. Typing `MY_FOLDER` as `<name>` will create a category named `MY FOLDER`.
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         bot_id = "".join(choice(allchar) for x in range(randint(8, 8)))
         namecoded = m.text.split()[1]
@@ -686,12 +687,12 @@ def addcategory(m):
                 telebot.types.InlineKeyboardButton('Anilist - Movies', callback_data='amovies'),
                 telebot.types.InlineKeyboardButton('Anilist - TV Shows', callback_data='atv_shows')
             )
-            catadddet = "<b>Category Details :-</b>\n\n<b>Name : </b>" + name + "\n<b>Folder ID : </b>" + folder_id + "\n\nNow Choose Category Type (<b>Within 15 seconds</b>) :-"
+            catadddet = "*Category Details :-*\n\n*Name : *" + name + "\n*Folder ID : *" + folder_id + "\n\nNow Choose Category Type (*Within 15 seconds*) :-"
             global catadd
-            catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML)
+            catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
             
             global cataddS
-            cataddS = "Adding Category <code>" + name + "</code> to Libdrive ...\n\n<code>This might take around 15-30 Seconds...</code>"
+            cataddS = "Adding Category `" + name + "` to Libdrive ...\n\n`This might take around 15-30 Seconds...`"
 
             r1 = requests.get(url)
             res1 = r1.json()
@@ -722,11 +723,11 @@ def addcategory(m):
                 pass
 
             category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_cat)}
-            CatS="<b>Name :</b> <code>" + name + "</code>\n<b>Folder ID :</b> <code>" + folder_id + "</code>\n<b>Type :</b> <code>" + type_cat + "</code>\n"
+            CatS="*Name :* `" + name + "`\n*Folder ID :* `" + folder_id + "`\n*Type :* `" + type_cat + "`\n"
 
             if anilist==True:
                 category_dict.update({"anilist":True})
-                CatS = CatS + "<b>Anilist :</b> <code>" + "True" + "</code>\n"
+                CatS = CatS + "*Anilist :* `" + "True" + "`\n"
             else:
                 pass
             
@@ -756,11 +757,11 @@ def addcategory(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                bot.edit_message_text("<b>Category Added Successfully :- </b>\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                bot.edit_message_text("*Category Added Successfully :- *\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=catadd.message_id, parse_mode=telegram.ParseMode.HTML)
+            bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=catadd.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['rmcategory'])
 @restricted
@@ -768,10 +769,10 @@ def rmcategory(m):
     chat = m.text[11:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Remove a Category :-</b>
-        Send /rmcategory <code>&lt;id&gt;</code>
+        \n*To Remove a Category :-*
+        Send /rmcategory `<id>`
         \nGet Category's ID with /categories\n
-        """, parse_mode=telegram.ParseMode.HTML)
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         id = m.text.split()[1]
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
@@ -814,12 +815,12 @@ def rmcategory(m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                CatS="<b>Name :</b> <code>" + name + "</code>\n<b>Type :</b> <code>" + type + "</code>"
-                bot.send_message(m.chat.id, text="<b>Category with ID - </b><code>" + id + "</code><b> Removed Successfully :- </b>\n\n" + CatS , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                CatS="*Name :* `" + name + "`\n*Type :* `" + type + "`"
+                bot.send_message(m.chat.id, text="*Category with ID - *`" + id + "`* Removed Successfully :- *\n\n" + CatS , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['config'])
 @restricted
@@ -832,42 +833,42 @@ def config(m):
         try:
             if res["code"] == 200 and res["success"] == True:
                 global ConSgoogle
-                ConSgoogle = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
+                ConSgoogle = "*Google Credentials :-*\n\n✯ * Access Token :* `" + str(config["access_token"]) + "`\n\n" + "✯ * Client ID :* `" + str(config["client_id"]) + "`\n\n" + "✯ * Client Secret :* `" + str(config["client_secret"]) + "`\n\n" + "✯ * Refresh Token :* `" + str(config["refresh_token"]) + "`\n\n" + "✯ * Token Expiry :* `" + str(config["token_expiry"]) + "`\n\n"
                 global ConSothers
-                ConSothers = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
+                ConSothers = "*Server Configs :-*\n\n✯ * Build Interval :* `" + str(config["build_interval"]) + "`\n\n" + "✯ * Build Type :* `" + str(config["build_type"]) + "`\n\n" + "✯ * Cloudflare :* `" + str(config["cloudflare"]) + "`\n\n" + "✯ * Signup :* `" + str(config["signup"]) + "`\n\n" + "✯ * Subtitles :* `" + str(config["subtitles"]) + "`\n\n" + "✯ * TMDB API :* `" + str(config["tmdb_api_key"]) + "`\n\n" + "✯ * Transcoded :* `" + str(config["transcoded"]) + "`\n\n"
                 global ConSsite
-                ConSsite = "<b>Website Configs :-</b>\n\n✯ <b> Title :</b> <code>" + str(config["ui_config"]["title"]) + "</code>\n\n" + "✯ <b> Icon :</b> <code>" + str(config["ui_config"]["icon"]) + "</code>\n\n" + "✯ <b> Page Range :</b> <code>" + str(config["ui_config"]["range"]) + "</code>\n\n"
+                ConSsite = "*Website Configs :-*\n\n✯ * Title :* `" + str(config["ui_config"]["title"]) + "`\n\n" + "✯ * Icon :* `" + str(config["ui_config"]["icon"]) + "`\n\n" + "✯ * Page Range :* `" + str(config["ui_config"]["range"]) + "`\n\n"
                 keyboard = telebot.types.InlineKeyboardMarkup()
                 keyboard.row(
                     telebot.types.InlineKeyboardButton('❌', callback_data='close'),
                     telebot.types.InlineKeyboardButton('Server Configs', callback_data='1')
                 )
-                ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change to Config using : /set <code>key</code> <code>value</code></b>'
+                ConShome = '*Hello [' + m.from_user.first_name + '](' + m.from_user.username + '),\n\nIf You Want to Change a Config :\n\n1. Get the Config `key` by using : /settings\n\n2. Change to Config using : /set `key` `value`*'
                 global configs
-                configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                configs = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         try:
             if res["code"] == 200 and res["success"] == True:
                 global ConSgooglewui
-                ConSgooglewui = "<b>Google Credentials :-</b>\n\n✯ <b> Access Token :</b> <code>" + str(config["access_token"]) + "</code>\n\n" + "✯ <b> Client ID :</b> <code>" + str(config["client_id"]) + "</code>\n\n" + "✯ <b> Client Secret :</b> <code>" + str(config["client_secret"]) + "</code>\n\n" + "✯ <b> Refresh Token :</b> <code>" + str(config["refresh_token"]) + "</code>\n\n" + "✯ <b> Token Expiry :</b> <code>" + str(config["token_expiry"]) + "</code>\n\n"
+                ConSgooglewui = "*Google Credentials :-*\n\n✯ * Access Token :* `" + str(config["access_token"]) + "`\n\n" + "✯ * Client ID :* `" + str(config["client_id"]) + "`\n\n" + "✯ * Client Secret :* `" + str(config["client_secret"]) + "`\n\n" + "✯ * Refresh Token :* `" + str(config["refresh_token"]) + "`\n\n" + "✯ * Token Expiry :* `" + str(config["token_expiry"]) + "`\n\n"
                 global ConSotherswui
-                ConSotherswui = "<b>Server Configs :-</b>\n\n✯ <b> Build Interval :</b> <code>" + str(config["build_interval"]) + "</code>\n\n" + "✯ <b> Build Type :</b> <code>" + str(config["build_type"]) + "</code>\n\n" + "✯ <b> Cloudflare :</b> <code>" + str(config["cloudflare"]) + "</code>\n\n" + "✯ <b> Signup :</b> <code>" + str(config["signup"]) + "</code>\n\n" + "✯ <b> Subtitles :</b> <code>" + str(config["subtitles"]) + "</code>\n\n" + "✯ <b> TMDB API :</b> <code>" + str(config["tmdb_api_key"]) + "</code>\n\n" + "✯ <b> Transcoded :</b> <code>" + str(config["transcoded"]) + "</code>\n\n"
+                ConSotherswui = "*Server Configs :-*\n\n✯ * Build Interval :* `" + str(config["build_interval"]) + "`\n\n" + "✯ * Build Type :* `" + str(config["build_type"]) + "`\n\n" + "✯ * Cloudflare :* `" + str(config["cloudflare"]) + "`\n\n" + "✯ * Signup :* `" + str(config["signup"]) + "`\n\n" + "✯ * Subtitles :* `" + str(config["subtitles"]) + "`\n\n" + "✯ * TMDB API :* `" + str(config["tmdb_api_key"]) + "`\n\n" + "✯ * Transcoded :* `" + str(config["transcoded"]) + "`\n\n"
                 keyboard = telebot.types.InlineKeyboardMarkup()
                 keyboard.row(
                     telebot.types.InlineKeyboardButton('❌', callback_data='closewui'),
                     telebot.types.InlineKeyboardButton('Server Configs', callback_data='1wui')
                 )
-                ConShome = '<b>Hello <a href="telegram.me/' + m.from_user.username + '">' + m.from_user.first_name + '</a>,\n\nIf You Want to Change a Config :\n\n1. Get the Config <code>key</code> by using : /settings\n\n2. Change the Config using : /set <code>key</code> <code>value</code></b>'
+                ConShome = '*Hello [' + m.from_user.first_name + '](' + m.from_user.username + '),\n\nIf You Want to Change a Config :\n\n1. Get the Config `key` by using : /settings\n\n2. Change the Config using : /set `key` `value`*'
                 global configswui
-                configswui = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                configswui = bot.send_message(m.chat.id, ConShome, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['settings'])
 @restricted
@@ -883,13 +884,13 @@ def settings(m):
             for i in config.keys():
                 if i == "category_list" or i == "account_list" or i == "service_accounts" or i == "token_expiry" or i == "ui_config":
                     continue
-                SetAddS = "• <code>" + i + "</code> : <code>" + str(config[i]) + "</code>\n\n"
+                SetAddS = "• `" + i + "` : `" + str(config[i]) + "`\n\n"
                 SetS = SetS + SetAddS
-            bot.send_message(m.chat.id, text="<b>Libdrive Server Settings :-</b>\n\n" + str(SetS) , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.send_message(m.chat.id, text="*Libdrive Server Settings :-*\n\n" + str(SetS) , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['set'])
 @restricted
@@ -902,17 +903,17 @@ def set(m):
         i += m.text.split()[1]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Change a Setting :-</b>
-        Send /set <code>&lt;key&gt; &lt;value&gt;</code>
-        \nGet <code>keys</code> by sending /settings
+        \n*To Change a Setting :-*
+        Send /set `<key> <value>`
+        \nGet `keys` by sending /settings
         \n⚠ Do Not Use This Command For Accounts, Categories and UI Config
-        \nSeperate Commands are available for that !!""", parse_mode=telegram.ParseMode.HTML)
+        \nSeperate Commands are available for that !!""", parse_mode=telegram.ParseMode.MARKDOWN)
     elif i == "category_list" or i == "account_list" or i == "service_accounts" or i == "token_expiry" or i == "ui_config":
         bot.send_message(m.chat.id, text = """The /set Command does not work for this key.
         \n⚠️ Do Not Use The /set Command For :-
         Accounts, Categories and UI Config
         \nSome other keys are also not supported...
-        """, parse_mode=telegram.ParseMode.HTML)
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         key = m.text.split()[1]
         value_script = m.text.split()[2]
@@ -953,11 +954,11 @@ def set(m):
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
 
-                bot.send_message(m.chat.id, text="<b>Libdrive Setting </b><code>" + key + "</code> Successfully Changed !!\n\nFrom <code>" + str(prev) + "</code> <b>→</b> <code>" + str(value) + "</code>" , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                bot.send_message(m.chat.id, text="*Libdrive Setting *`" + key + "` Successfully Changed !!\n\nFrom `" + str(prev) + "` *→* `" + str(value) + "`" , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['ui'])
 @restricted
@@ -971,13 +972,13 @@ def ui(m):
             config = res["content"]["ui_config"]
             SetS = ""
             for i in config.keys():
-                SetAddS = "• <code>" + i + "</code> : <code>" + str(config[i]) + "</code>\n\n"
+                SetAddS = "• `" + i + "` : `" + str(config[i]) + "`\n\n"
                 SetS = SetS + SetAddS
-            bot.send_message(m.chat.id, text="<b>Libdrive UI Settings :-</b>\n\n" + str(SetS) , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+            bot.send_message(m.chat.id, text="*Libdrive UI Settings :-*\n\n" + str(SetS) , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
         else:
-            bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+        bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['setui'])
 @restricted
@@ -985,10 +986,10 @@ def setui(m):
     chat = m.text[6:]
     if chat == "":
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n<b>To Change a Setting :-</b>
-        Send /setui <code>&lt;key&gt; &lt;value&gt;</code>
-        \nGet <code>keys</code> by sending /ui
-        """, parse_mode=telegram.ParseMode.HTML)
+        \n*To Change a Setting :-*
+        Send /setui `<key> <value>`
+        \nGet `keys` by sending /ui
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         key = m.text.split()[1]
         value_script = m.text.split()[2]
@@ -1030,39 +1031,184 @@ def setui(m):
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
 
-                bot.send_message(m.chat.id, text="<b>Libdrive UI Setting </b><code>" + key + "</code> Successfully Changed !!\n\nFrom <code>" + str(prev) + "</code> <b>→</b> <code>" + str(value) + "</code>" , parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                bot.send_message(m.chat.id, text="*Libdrive UI Setting *`" + key + "` Successfully Changed !!\n\nFrom `" + str(prev) + "` *→* `" + str(value) + "`" , parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.send_message(m.chat.id, text="<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", parse_mode=telegram.ParseMode.HTML)
+                bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-            bot.send_message(m.chat.id, text="<code>LibDrive Server Not Accessible !!</code>", parse_mode=telegram.ParseMode.HTML)
+            bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['hrestart'])
 def hrestart(m):
     try:
-        restart = bot.send_message(m.chat.id, text="<code>Restarting Dynos ...n\n\nPls Wait for 2-3 minutes for LibDrive to be Back...</code>", parse_mode=telegram.ParseMode.HTML)
+        restart = bot.send_message(m.chat.id, text="`Restarting Dynos ...n\n\nPls Wait for 2-3 minutes for LibDrive to be Back...`", parse_mode=telegram.ParseMode.MARKDOWN)
 
         cmd = 'heroku dyno:restart web.1 -a ' + HEROKU_APP_NAME
         stream = os.popen(cmd)
         output = stream.readlines()
 
     except:
-        bot.edit_message_text("<code>Heroku Not Accessible !!</code>", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.HTML)
+        bot.edit_message_text("`Heroku Not Accessible !!`", m.chat.id, message_id=restart.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.message_handler(commands=['hdyno'])
 def hdyno(m):
     try:
-        dyno = bot.send_message(m.chat.id, text="<code>Getting Dyno Stats ...</code>", parse_mode=telegram.ParseMode.HTML)
+        dyno = bot.send_message(m.chat.id, text="`Getting Dyno Stats ...`", parse_mode=telegram.ParseMode.MARKDOWN)
 
         cmd = 'heroku ps -a ' + HEROKU_APP_NAME
         stream = os.popen(cmd)
         output = stream.readlines()
 
-        res = "<b>Heroku Dyno STATS :-</b>\n\n" + output[0] + "\n" + output[1] + "\n" + output[6]
+        res = "*Heroku Dyno STATS :-*\n\n" + output[0] + "\n" + output[1] + "\n" + output[6]
         print(res)
         
-        bot.edit_message_text(res, m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.HTML)
+        bot.edit_message_text(res, m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.edit_message_text("<code>Heroku Not Accessible !!</code>", m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.HTML)
+        bot.edit_message_text("`Heroku Not Accessible !!`", m.chat.id, message_id=dyno.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+
+@bot.message_handler(commands=['search'])
+def search(m):
+    chat = m.text[7:]
+    if chat == "" :
+        bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
+        \n*To Search for Content :-*
+        Send /search `<search_query>`
+        """, parse_mode=telegram.ParseMode.MARKDOWN)
+    else:
+        query = m.text.split()[1]
+        try:
+            telegraph = Telegraph()
+
+            telegraph_acc = telegraph.create_account(
+                short_name="Shrey Lib",
+                author_name="Shrey LibDrive Bot",
+                author_url="https://github.com/shrey2199/LD_Meta_bot"
+            )
+
+            search_results = bot.send_message(m.chat.id, "`Searching Your LibDrive ...`\n\n`Query` : *{}*".format(query), parse_mode=telegram.ParseMode.MARKDOWN)
+
+            url_conf = "https://{}/api/v1/config?secret={}".format(LD_DOMAIN, SECRET)
+
+            r1 = requests.get(url_conf)
+            res1 = r1.json()
+            search_acc_auth = res1["content"]["account_list"][0]["auth"]
+
+            url_meta = "https://{}/api/v1/metadata?a={}&q={}".format(LD_DOMAIN, search_acc_auth, query)
+
+            r2 = requests.get(url_meta)
+            res2 = r2.json()
+
+            html_string = ""
+            num_of_results = 0
+
+            if res2["code"] == 200 and res2["success"] == True:
+                for cat in res2["content"]:
+                    if len(cat["children"]) != 0:
+                        for media in cat["children"]:
+                            num_of_results += 1
+                            title = media["title"]
+                            type_ = cat["categoryInfo"]["type"]
+                            if "releaseDate" in media.keys():
+                                releaseDate = media["releaseDate"]
+                            else:
+                                releaseDate = ""
+                            if "backdropPath" in media.keys():
+                                backdrop = media["backdropPath"]
+                            else:
+                                backdrop = ""
+                            if "overview" in media.keys():
+                                overview = media["overview"]
+                            else:
+                                overview = ""
+
+                            if str(type_) == "TV Shows":
+                                show_id = media["id"]
+                                url_show = "https://{}/api/v1/metadata?a={}&id={}".format(LD_DOMAIN, search_acc_auth, show_id)
+                                r3 = requests.get(url_show)
+                                res3 = r3.json()
+
+                                f_season_html = ""
+
+                                for season in res3["content"]["children"]:
+                                    season_name = season["name"]
+                                    season_id = season["id"]
+
+                                    url_season = "https://{}/api/v1/metadata?a={}&id={}".format(LD_DOMAIN, search_acc_auth, season_id)
+                                    r4 = requests.get(url_season)
+                                    res4 = r4.json()
+
+                                    episode_num = 0
+                                    episode_html = ""
+
+                                    for episode in res4["content"]["children"]:
+                                        episode_name = episode["name"]
+                                        episode_id = episode["id"]
+                                        episode_num+=1
+                                        dir_down_url = "https://{}/api/v1/redirectdownload/{}?a={}&id={}".format(LD_DOMAIN, episode_name.replace(" ","%20"), search_acc_auth, episode_id)
+
+                                        episode_str = '''<p>
+                                                        <b> - - - - - - - - - - - - Episode : </b><code>''' + str(episode_num) + '''</code><br>
+                                                        <b> - - - - - - - - - - - - Direct Download Link : </b><a href={}>Download From Here</a> !!<br>
+                                                        </p>'''.format(dir_down_url)
+
+                                        episode_html = episode_html + '{}'.format(episode_str)
+                                    
+                                    season_html = '''
+                                                    <b> - - - - - Season : </b><code>''' + season_name + '''</code><br><br>
+                                                    {}
+                                                    '''.format(episode_html)
+                                    
+                                    telegraph_season = telegraph.create_page(
+                                        title=season_name,
+                                        html_content=season_html,
+                                        author_name='Shrey Libdrive Bot',
+                                        author_url='https://github.com/shrey2199/LD_Meta_bot'
+                                    )
+                                    season_url = telegraph_season['path']
+
+                                    season_html_url = '''
+                                                    <b> - - - - - Season : </b><a href="https://telegra.ph/''' + season_url + '''">''' + season_name + '''</a><br><br>
+                                                    '''
+
+                                    f_season_html = f_season_html + season_html_url
+
+                            else:
+                                name = media["name"]
+                                dir_down = "https://{}/api/v1/redirectdownload/{}?a={}&id={}".format(LD_DOMAIN, name.replace(" ","%20"), search_acc_auth, media["id"])
+                                f_season_html = "<b> - - - - - - - Direct Download Link : </b><a href={}>Download From Here</a> !!<br>".format(dir_down)
+
+                            TG_html = '''<p>
+                                            <img src=''' + str(backdrop) + '''>
+                                            <b>Name : </b><code>''' + str(title) + '''</code><br>
+                                            <b> - Overview : </b><code>''' + str(overview) + '''</code><br>
+                                            <b> - Release Date: </b><code>''' + str(releaseDate) + '''</code><br>
+                                            <b> - Type: </b><code>''' + str(type_) + '''</code><br><br>
+                                            {}<br>➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖<br>
+                                        </p>'''.format(f_season_html)
+
+                            html_string = html_string + TG_html
+                    else:
+                        continue
+            else:
+                pass
+
+            if num_of_results != 0:
+                telegraph_res = telegraph.create_page(
+                    title="LibDrive Search Results",
+                    html_content=html_string,
+                    author_name='Shrey Libdrive Bot',
+                    author_url='https://github.com/shrey2199/LD_Meta_bot'
+                )
+
+                telegraph_url = 'https://telegra.ph/{}'.format(telegraph_res['path'])
+                keyboard = telebot.types.InlineKeyboardMarkup()
+                keyboard.row(
+                    telebot.types.InlineKeyboardButton("🔍Search Results", url=telegraph_url)
+                )
+                bot.edit_message_text("`Query` : *{}*\n\n`Found `*{}*` Matching Search Results !!`".format(query, str(num_of_results)), m.chat.id, message_id=search_results.message_id, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
+            else:
+                bot.edit_message_text("*No Matching Search Results !!*", m.chat.id, message_id=search_results.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+        except:
+            bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=search_results.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
 @bot.callback_query_handler(func=lambda call: True)
 def iq_callback(query):
@@ -1128,13 +1274,13 @@ def action_category(action, m):
             r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
-                CatS="<b>Name :</b> <code>" + category["name"] + "</code>\n<b>Type :</b> <code>" + category["type"] + "</code>"
-                CatB = "<b>Category with ID - </b><code>" + bot_id + "</code><b> Removed :- </b>\n\n"
-                bot.edit_message_text(CatB + CatS, m.chat.id, message_id=categories.message_id, reply_markup=update_keyboard(CatB), parse_mode=telegram.ParseMode.HTML, disable_web_page_preview=True)
+                CatS="*Name :* `" + category["name"] + "`\n*Type :* `" + category["type"] + "`"
+                CatB = "*Category with ID - *`" + bot_id + "`* Removed :- *\n\n"
+                bot.edit_message_text(CatB + CatS, m.chat.id, message_id=categories.message_id, reply_markup=update_keyboard(CatB), parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
             else:
-                bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+                bot.edit_message_text("`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
         except:
-                bot.edit_message_text("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+                bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
 def action_listcategory(m):
     url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
@@ -1166,11 +1312,11 @@ def action_listcategory(m):
                 telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
             )
             global categories
-            categories = bot.edit_message_text("<b>Categories :-</b>" , m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML, reply_markup=keyboard, disable_web_page_preview=True)
+            categories = bot.edit_message_text("*Categories :-*" , m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN, reply_markup=keyboard, disable_web_page_preview=True)
         else:
-            bot.edit_message_text("<code>Unknown Error Occured !!\nPlease Verify Your Credentials !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+            bot.edit_message_text("`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
     except:
-        bot.send_message("<code>LibDrive Server Not Accessible !!</code>", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.HTML)
+        bot.send_message("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
 def update_message(m):
     if data == '1' or data == '2' or data == '3' or data == 'close':
@@ -1184,7 +1330,7 @@ def update_message(m):
             bot.edit_message_text(pg,
                 m.chat.id, message_id=configs.message_id,
                 reply_markup=update_keyboard(pg),
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
         elif data == 'close':
             bot.delete_message(m.chat.id, message_id=configs.message_id)
         else:
@@ -1198,7 +1344,7 @@ def update_message(m):
             bot.edit_message_text(pg,
                 m.chat.id, message_id=configswui.message_id,
                 reply_markup=update_keyboard(pg),
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
         elif data == 'closewui':
             bot.delete_message(m.chat.id, message_id=configswui.message_id)
         else:
@@ -1210,25 +1356,25 @@ def update_message(m):
             messg = cataddS          
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "movies"
         elif data == 'tv_shows':
             messg = cataddS               
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "tv_shows"
         elif data == 'amovies':
             messg = cataddS          
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "amovies"
         elif data == 'atv_shows':
             messg = cataddS          
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
-                parse_mode=telegram.ParseMode.HTML)
+                parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "atv_shows"
     elif data == 'instructions' or data == 'help' or data == 'closehelp':
         if data == 'instructions' or data == 'help':
@@ -1239,7 +1385,7 @@ def update_message(m):
             bot.edit_message_text(pg,
                 m.chat.id, message_id=HelpMessage.message_id,
                 reply_markup=update_keyboard(pg),
-                parse_mode='HTML')
+                parse_mode=telegram.ParseMode.MARKDOWN)
         elif data == 'closehelp':
             bot.delete_message(m.chat.id, message_id=HelpMessage.message_id)
         else:
@@ -1249,17 +1395,17 @@ def update_message(m):
             m.chat.id, message_id=categories.message_id
         )
     elif str(data).startswith("cat"):
-        pg = "<b>Category Configs :-</b>\n\n"
+        pg = "*Category Configs :-*\n\n"
         for category in CatC:
             if data == category["cats"]:
                 if "anilist" in category.keys():
-                    pg = pg + "Name : <code>" + category["name"] + "</code>\nFolder ID : <code>" + category["id"] + "</code>\nType : <code>" + category["type"] + "</code>\nAnilist : <code>" + str(category["anilist"]) + "</code>\n"
+                    pg = pg + "Name : `" + category["name"] + "`\nFolder ID : `" + category["id"] + "`\nType : `" + category["type"] + "`\nAnilist : `" + str(category["anilist"]) + "`\n"
                 else:
-                    pg = pg + "Name : <code>" + category["name"] + "</code>\nFolder ID : <code>" + category["id"] + "</code>\nType : <code>" + category["type"] + "</code>\n"
+                    pg = pg + "Name : `" + category["name"] + "`\nFolder ID : `" + category["id"] + "`\nType : `" + category["type"] + "`\n"
                 bot.edit_message_text(pg,
                     m.chat.id, message_id=categories.message_id,
                     reply_markup=update_keyboard(pg),
-                    parse_mode='HTML'
+                    parse_mode=telegram.ParseMode.MARKDOWN
                 )
             else:
                 pass
