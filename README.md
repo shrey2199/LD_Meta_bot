@@ -117,6 +117,7 @@ Run The Docker Container and Define the Variables in One Command
     assignid - To assign bot_id.
     unassignid - To remove bot_id.
     accounts - To View Registered Accounts of your Libdrive.
+    accountsclip - To View Your Accounts in an Online Paste.
     addaccount - To Add an Account to Libdrive.
     rmaccount - To Remove an Account from Libdrive.
     rmaccid - To Remove an Account using bot_id
