@@ -26,22 +26,22 @@
       },
       "ADMIN_IDS": {
         "description": "The Telegram User ID of the Owner of the Bot. Get it by using /info in @MissRose_bot.",
-        "required": false
+        "required": true
       },
       "PIC": {
         "description": "The Picture You want to appear when start command is used.",
         "required": false
       },
       "HEROKU_APP_NAME": {
-        "description": "The Name Of Heroku This App.",
+        "description": "The Name Of Heroku Lidrive App.",
         "required": false
       },
       "HEROKU_API_KEY": {
-        "description": "The API Key of This Heroku Account.",
+        "description": "The API Key of Heroku Account where Libdrive is set up.",
         "required": false
       },
       "HEROKU_EMAIL": {
-        "description": "The Email ID of This Heroku Account.",
+        "description": "The Email ID of Heroku Account where Libdrive is set up.",
         "required": false
       }
     },
