@@ -36,6 +36,9 @@ class catsetup:
     def categories_mod(m):
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
         try:
+
+            tempcat = bot.send_message(m.chat.id, text="`Getting Your Categories ...`", parse_mode=telegram.ParseMode.MARKDOWN)
+
             r1 = requests.get(url)
             r2 = requests.get(url)
             res1 = r1.json()
@@ -62,10 +65,13 @@ class catsetup:
                     telebot.types.InlineKeyboardButton('❌ CLOSE ❌', callback_data='closecat')
                 )
                 global categories
+                bot.delete_message(m.chat.id, message_id=tempcat.message_id)
                 categories = bot.send_message(m.chat.id, text="*Categories :-*" , parse_mode=telegram.ParseMode.MARKDOWN, reply_markup=keyboard, disable_web_page_preview=True)
             else:
+                bot.delete_message(m.chat.id, message_id=tempcat.message_id)
                 bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
+            bot.delete_message(m.chat.id, message_id=tempcat.message_id)
             bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
     def setanilist_mod(m):
@@ -141,96 +147,30 @@ class catsetup:
             Eg. Typing `MY_FOLDER` as `<name>` will create a category named `MY FOLDER`.
             """, parse_mode=telegram.ParseMode.MARKDOWN)
         else:
+            global bot_id
             bot_id = "".join(choice(allchar) for x in range(randint(8, 8)))
             namecoded = m.text.split()[1]
+            global name
             name = namecoded.replace("_", " ")
+            global folder_id
             folder_id = m.text.split()[2]
-            url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
-            try:
-                keyboard = telebot.types.InlineKeyboardMarkup()
-                keyboard.row(
-                    telebot.types.InlineKeyboardButton('Movies', callback_data='movies'),
-                    telebot.types.InlineKeyboardButton('TV Shows', callback_data='tv_shows'),
-                )
-                keyboard.row(
-                    telebot.types.InlineKeyboardButton('Anilist - Movies', callback_data='amovies'),
-                    telebot.types.InlineKeyboardButton('Anilist - TV Shows', callback_data='atv_shows')
-                )
-                catadddet = "*Category Details :-*\n\n*Name : *" + name + "\n*Folder ID : *" + folder_id + "\n\nNow Choose Category Type (*Within 15 seconds*) :-"
-                global catadd
-                catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
-                
-                global cataddS
-                cataddS = "Adding Category `" + name + "` to Libdrive ...\n\n`This might take around 15-30 Seconds...`"
+            keyboard = telebot.types.InlineKeyboardMarkup()
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('Movies', callback_data='movies'),
+                telebot.types.InlineKeyboardButton('TV Shows', callback_data='tv_shows'),
+            )
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('Anilist - Movies', callback_data='amovies'),
+                telebot.types.InlineKeyboardButton('Anilist - TV Shows', callback_data='atv_shows')
+            )
+            catadddet = "*Category Details :-*\n\n*Name : *" + name + "\n*Folder ID : *" + folder_id + "\n\nNow Choose Category Type (*Within 15 seconds*) :-"
+            global catadd
+            catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
+            
+            global cataddS
+            cataddS = "Adding Category `" + name + "` to Libdrive ...\n\n`This might take around 15-30 Seconds...`"
 
-                r1 = requests.get(url)
-                res1 = r1.json()
-                conf = res1["content"]
-                confcat = res1["content"]["category_list"]
-
-                for timex in range(1, 15):
-                    bot.send_chat_action(m.chat.id, 'typing')
-                    time.sleep(1)
-
-                if type_media=='movies' or type_media=='tv_shows':
-                    anilist = False
-                    if type_media=='movies':
-                        type_cat = 'Movies'
-                    if type_media=='tv_shows':
-                        type_cat = 'TV Shows'
-                    else:
-                        pass
-                if type_media=='amovies' or type_media=='atv_shows':
-                    anilist = True
-                    if type_media=='amovies':
-                        type_cat = 'Movies'
-                    if type_media=='atv_shows':
-                        type_cat = 'TV Shows'
-                    else:
-                        pass
-                else:
-                    pass
-
-                category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_cat)}
-                CatS="*Name :* `" + name + "`\n*Folder ID :* `" + folder_id + "`\n*Type :* `" + type_cat + "`\n"
-
-                if anilist==True:
-                    category_dict.update({"anilist":True})
-                    CatS = CatS + "*Anilist :* `" + "True" + "`\n"
-                else:
-                    pass
-                
-                confcat.append(category_dict)
-
-                headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
-                    'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
-                    'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
-                    'accept-language': 'en-US,en;q=0.9',
-                }
-
-                params = (
-                    ('secret', SECRET),
-                )
-
-                data = json.dumps(conf)
-                
-                r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
-                res = r.json()
-                if res["code"] == 200 and res["success"] == True:
-                    bot.edit_message_text("*Category Added Successfully :- *\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
-                else:
-                    bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
-            except:
-                bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=catadd.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+        
 
     def rmcategory_mod(m):
         chat = m.text[11:]
@@ -332,6 +272,9 @@ def cat_update_message(m, data):
         bot.delete_message(
             m.chat.id, message_id=categories.message_id
         )
+        bot.delete_message(
+            m.chat.id, message_id=m.message.id
+        )
     elif str(data).startswith("cat"):
         pg = "*Category Configs :-*\n\n"
         for category in CatC:
@@ -387,6 +330,74 @@ def cat_update_keyboard(pg, data):
     else:
         pass
 
+def action_addcategory(m, type_media):
+    try:    
+        url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
+        r1 = requests.get(url)
+        res1 = r1.json()
+        conf = res1["content"]
+        confcat = res1["content"]["category_list"]
+
+        if type_media=='movies' or type_media=='tv_shows':
+            anilist = False
+            if type_media=='movies':
+                type_cat = 'Movies'
+            if type_media=='tv_shows':
+                type_cat = 'TV Shows'
+            else:
+                pass
+        if type_media=='amovies' or type_media=='atv_shows':
+            anilist = True
+            if type_media=='amovies':
+                type_cat = 'Movies'
+            if type_media=='atv_shows':
+                type_cat = 'TV Shows'
+            else:
+                pass
+        else:
+            pass
+
+        category_dict = {"id": folder_id, "name": name, "bot_id":bot_id, "type": str(type_cat)}
+        CatS="*Name :* `" + name + "`\n*Folder ID :* `" + folder_id + "`\n*Type :* `" + type_cat + "`\n"
+
+        if anilist==True:
+            category_dict.update({"anilist":True})
+            CatS = CatS + "*Anilist :* `" + "True" + "`\n"
+        else:
+            pass
+        
+        confcat.append(category_dict)
+
+        headers = {
+            'authority': LD_DOMAIN,
+            'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
+            'accept': 'application/json, text/plain, */*',
+            'sec-ch-ua-mobile': '?0',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+            'content-type': 'application/json;charset=UTF-8',
+            'origin': 'https://' + LD_DOMAIN,
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://' + LD_DOMAIN + '/settings',
+            'accept-language': 'en-US,en;q=0.9',
+        }
+
+        params = (
+            ('secret', SECRET),
+        )
+
+        data = json.dumps(conf)
+        
+        r = requests.post('https://' + LD_DOMAIN + '/api/v1/config', headers=headers, params=params, data=data)
+        res = r.json()
+        if res["code"] == 200 and res["success"] == True:
+            bot.edit_message_text("*Category Added Successfully :- *\n\n" + CatS, m.chat.id, message_id=catadd2.message_id, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+        else:
+            bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
+    except:
+        bot.edit_message_text("`LibDrive Server Not Accessible !!`", m.chat.id, message_id=catadd.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+
 def action_keyboard(m, data):
     if data == "back":
         action_listcategory(m)
@@ -396,6 +407,8 @@ def action_keyboard(m, data):
             if data == category["delete"]:
                 global bot_id
                 bot_id = category["bot_id"]
+                global delname
+                delname = category["name"]
                 for delcat in CatL:
                     if delcat["bot_id"]==bot_id:
                         CatL.remove(delcat)
@@ -408,6 +421,8 @@ def action_keyboard(m, data):
 def action_category(action, m):
     if action == "delete":
         try:
+            bot.edit_message_text(f"`Deleting Category` *{delname}*", m.chat.id, message_id=categories.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+
             keyboard = telebot.types.InlineKeyboardMarkup()
             keyboard.row(
                 telebot.types.InlineKeyboardButton("Back To Categories", callback_data='back')

@@ -36,6 +36,8 @@ class accountsetup:
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
         
         try:
+
+            tempacc = bot.send_message(m.chat.id, text="`Getting Your Accounts ...`", parse_mode=telegram.ParseMode.MARKDOWN)
             r = requests.get(url)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
@@ -49,15 +51,20 @@ class accountsetup:
                     else:
                         AccN+=1
                         AccS=AccS + str(AccN) + ". *" + str(account["username"]) + " :* `" + str(account["auth"]) + "`\n\n"
+                bot.delete_message(m.chat.id, message_id=tempacc.message_id)
                 bot.send_message(m.chat.id, text="*Registered Accounts :-*\n\n" + str(AccS) , parse_mode=telegram.ParseMode.MARKDOWN)
             else:
+                bot.delete_message(m.chat.id, message_id=tempacc.message_id)
                 bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
+            bot.delete_message(m.chat.id, message_id=tempacc.message_id)
             bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
     def accountsclipmes(m):
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
         try:
+
+            tempacc = bot.send_message(m.chat.id, text="`Getting Your Accounts ...`", parse_mode=telegram.ParseMode.MARKDOWN)
             r = requests.get(url)
             res = r.json()
             if res["code"] == 200 and res["success"] == True:
@@ -92,11 +99,14 @@ class accountsetup:
                     telebot.types.InlineKeyboardButton("Your Accounts !!", url=clip_url)
                 )
 
+                bot.delete_message(m.chat.id, message_id=tempacc.message_id)
                 bot.send_message(m.chat.id, text=f"*Accounts Found !!*\n\n`Total Accounts : `{TAcc}", reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
                 print(clip_api_url, "  &  ", clip_url)
             else:
+                bot.delete_message(m.chat.id, message_id=tempacc.message_id)
                 bot.send_message(m.chat.id, text="`Unknown Error Occured !!\nPlease Verify Your Credentials !!`", parse_mode=telegram.ParseMode.MARKDOWN)
         except:
+            bot.delete_message(m.chat.id, message_id=tempacc.message_id)
             bot.send_message(m.chat.id, text="`LibDrive Server Not Accessible !!`", parse_mode=telegram.ParseMode.MARKDOWN)
 
     def addaccountmes(m):

@@ -133,6 +133,7 @@ Run The Docker Container and Define the Variables in One Command
     hrestart - Restart Heroku Dynos.(Heroku Only)
     hdyno - Get Heroku Dyno Stats.(Heroku Only)
     search - To Search Your LibDrive.
+    m3u8 - To get m3u8 Playlists. (Incomplete)
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
 
 ## Credits

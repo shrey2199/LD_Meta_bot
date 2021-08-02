@@ -55,6 +55,7 @@ def helpmes(m):
         \n/hrestart - *To Restart Heroku Dynos. (Only Heroku Deploys)*
         \n/hdyno - *To View Heroku Dyno Stats. (Only Heroku Deploys)*
         \n/search - *To Search Libdrive and Get Direct Download Links.*
+        \n/m3u8 - *To Get M3U8 Playlists from Bot itself. (Incomplete Feature For Now)*
         \n/speedtest - *To Perform a Speedtest on the Server. (Completely Irrelevant 😂)*
         """
     global Inststring

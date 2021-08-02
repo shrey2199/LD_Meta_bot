@@ -20,9 +20,10 @@ from helpers.rebuild import rebuildmes
 from helpers.restart import restartmes
 from helpers.search import searchmes
 from helpers.herokuctrl import hdyno_mod, hrestart_mod
+from helpers.m3u8 import getm3u8
 from helpers.help import helpmes, help_update_message, help_update_keyboard
 from helpers.config import configmes, config_update_message, config_update_keyboard
-from helpers.categories import  catsetup, cat_update_message, cat_update_keyboard, action_category, action_keyboard, action_listcategory
+from helpers.categories import  catsetup, cat_update_message, cat_update_keyboard, action_category, action_keyboard, action_listcategory, action_addcategory
 from helpers.bot_id import configsetups
 from helpers.accounts import accountsetup
 from helpers.settings import settingsedit
@@ -199,6 +200,11 @@ def hdyno(m):
 def search(m):
     searchmes(m)
 
+@bot.message_handler(commands=['m3u8'])
+@restricted
+def m3u8(m):
+    getm3u8(m)
+
 @bot.callback_query_handler(func=lambda call: True)
 def iq_callback(query):
     global data
@@ -211,6 +217,9 @@ def get_callback(query):
         help_update_message(query.message, data)
     elif data == '1' or data == '2' or data == '3' or data == 'close':
         config_update_message(query.message, data)
+    elif data == 'movies' or data == 'tv_shows' or data == 'amovies' or data == 'atv_shows':
+        cat_update_message(query.message, data)
+        action_addcategory(query.message, data)
     else:
         cat_update_message(query.message, data)
         action_keyboard(query.message, data)
