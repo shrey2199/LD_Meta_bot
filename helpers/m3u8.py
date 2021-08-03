@@ -80,7 +80,7 @@ def getm3u8(m):
 
                                 show_path = m3u8_path + "/" + show_id
 
-                                show_dict = {"showname":title, "showpath":show_path}
+                                show_dict = {"showname":title, "showpath":show_path, "rD":releaseDate, "nos":num_of_seasons}
                                 shows_list.append(show_dict)
 
                                 if "m3u8" in os.listdir(path=root_path):
@@ -123,13 +123,20 @@ def getm3u8(m):
                     else:
                         continue
                 if num_of_results > 0:
-                    bot.edit_message_text(f"*Show Name* : `{title}`\n*Total Seasons* : `{num_of_seasons}`\n*Release Date* : `{releaseDate}`\n\n`Here Are You M3U8 Files for this Show !!`", m.chat.id, message_id=search_results.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
+                    bot.delete_message(m.chat.id, message_id=search_results.message_id)
                     for x in shows_list:
                         files_path = x["showpath"]
+                        stitle = x["showname"]
+                        numseason = x["nos"]
+                        rD = x["rD"]
+                        bot.send_message(m.chat.id, text=f"*Show Name* : `{stitle}`\n*Total Seasons* : `{numseason}`\n*Release Date* : `{rD}`\n\n`Here Are You M3U8 Files for this Show !!`", parse_mode=telegram.ParseMode.MARKDOWN)
                         for y in os.listdir(files_path):
                             file_data = files_path + "/" + y
                             with open(file=file_data, mode="rb") as file_mes:
                                 bot.send_document(m.chat.id, file_mes)
+                else:
+                    bot.delete_message(m.chat.id, message_id=search_results.message_id)
+                    bot.send_message(m.chat.id, text="*No Matching Shows Found !!*", parse_mode=telegram.ParseMode.MARKDOWN)
             else:
                 bot.edit_message_text("`Something Went Wrong. Check Credentials !!`", m.chat.id, message_id=search_results.message_id, parse_mode=telegram.ParseMode.MARKDOWN)
         except:
