@@ -114,7 +114,7 @@ def getm3u8(m):
 
                                             season_eplist.append(ep_str)
 
-                                        file_path = show_path + "/" + season_name
+                                        file_path = show_path + "/" + season_name + " - " + title
 
                                         with open(file=file_path + ".m3u8", mode='w+') as file:
                                             file.writelines(season_eplist)
