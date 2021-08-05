@@ -77,6 +77,10 @@ class settingsedit:
             value_script = m.text.split()[2]
             if value_script.isnumeric() == True:
                 value = int(value_script)
+            elif value_script.lower() == 'true':
+                value = True
+            elif value_script.lower() == 'false':
+                value = False
             else:
                 value = value_script
             url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET    

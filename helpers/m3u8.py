@@ -31,8 +31,8 @@ def getm3u8(m):
     chat = m.text[8:]
     if chat == "" :
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
-        \n*To Search for Content :-*
-        Send /search `<search_query>`
+        \n*To Get M3U8 of A Series :-*
+        Send /m3u8 `<show_name>`
         """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
         query = m.text.split()[1]
