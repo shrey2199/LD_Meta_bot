@@ -80,9 +80,10 @@ Run The Docker Container and Define the Variables in One Command
   - Use :- Send Photo with `/start` command.
 
 - `ADMIN_IDS`
-  - Values :- It is a list of IDs of all the allowed groups and useres who can use this bot in private. 
-    - To supply multiple IDs in config.py seperate by comma ','. 
+  - Values :- It is a list of IDs of all the allowed groups and users who can use this bot in private. 
+    - To supply multiple IDs in config.py seperate by spaces. 
     - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
+    - Group IDs should start with `-100`
   - Default Value :- `[]` 
   - Use :- Users and groups with ids here can use the bot.
 
@@ -132,7 +133,8 @@ Run The Docker Container and Define the Variables in One Command
     setui - To change The UI Settings of your Libdrive.
     hrestart - Restart Heroku Dynos.(Heroku Only)
     hdyno - Get Heroku Dyno Stats.(Heroku Only)
-    search - To Search Your LibDrive.
+    search - To Search Your LibDrive (Direct Download Links).
+    find - To Search Your LibDrive (View Online Links).
     m3u8 - To get m3u8 Playlists. (Incomplete)
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
 

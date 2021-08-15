@@ -19,6 +19,7 @@ from helpers.speedtest import speedtestmes
 from helpers.rebuild import rebuildmes
 from helpers.restart import restartmes
 from helpers.search import searchmes
+from helpers.find import findmes
 from helpers.herokuctrl import hdyno_mod, hrestart_mod
 from helpers.m3u8 import getm3u8
 from helpers.help import helpmes, help_update_message, help_update_keyboard
@@ -70,10 +71,10 @@ allchar = "abcdefghijklmnopqrstuvwxyz0123456789"
 def restricted(func):
     @wraps(func)
     def wrapped(update, *args, **kwargs):
-        user_id = update.from_user.id
+        user_id = update.chat.id
         if (restricted_mode) and (str(user_id) not in ADMIN_LIST):
             print("Unauthorized access denied for {} - {}.".format(user_id, update.from_user.username))
-            bot.send_message(update.chat.id, "*Error :\t\t*You are not Authorized to access the bot.\n\nPls Contact [Bot Admin](https://t.me/s_rawal) !!", parse_mode='Markdown', disable_web_page_preview=True)
+            bot.send_message(update.chat.id, "*Error :\t\t*You are not Authorized to access the bot.\n\nPls Add Chat ID to Config Vars.\n\n[Contact Bot Developer](https://t.me/shrey_contact_bot) !!", parse_mode='Markdown', disable_web_page_preview=True)
             return
         return func(update, *args, **kwargs)
     return wrapped
@@ -199,6 +200,11 @@ def hdyno(m):
 @restricted
 def search(m):
     searchmes(m)
+
+@bot.message_handler(commands=['find'])
+@restricted
+def find(m):
+    findmes(m)
 
 @bot.message_handler(commands=['m3u8'])
 @restricted

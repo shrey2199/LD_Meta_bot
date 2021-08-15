@@ -35,7 +35,7 @@ def searchmes(m):
         Send /search `<search_query>`
         """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        query = m.text.split()[1]
+        query = m.text[8:]
         try:
             telegraph = Telegraph()
 
@@ -141,8 +141,8 @@ def searchmes(m):
                                             <img src=''' + str(backdrop) + '''>
                                             <b>Name : </b><code>''' + str(title) + '''</code><br>
                                             <b> - Overview : </b><code>''' + str(overview) + '''</code><br>
-                                            <b> - Release Date: </b><code>''' + str(releaseDate) + '''</code><br>
-                                            <b> - Type: </b><code>''' + str(type_) + '''</code><br><br>
+                                            <b> - Release Date : </b><code>''' + str(releaseDate) + '''</code><br>
+                                            <b> - Type : </b><code>''' + str(type_) + '''</code><br><br>
                                             {}<br>➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖<br>
                                         </p>'''.format(f_season_html)
 
