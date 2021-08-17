@@ -28,8 +28,9 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 # HEROKU 
-Heroku = heroku3.from_key(HEROKU_API_KEY)
-app = Heroku.app(HEROKU_APP_NAME)
+if len(HEROKU_APP_NAME) != 0 and len(HEROKU_API_KEY) != 0:
+    Heroku = heroku3.from_key(HEROKU_API_KEY)
+    app = Heroku.app(HEROKU_APP_NAME)
 
 # Request Headers
 headers = {
