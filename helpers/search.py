@@ -3,6 +3,7 @@ import telebot
 import logging
 import requests
 from telegraph import Telegraph
+from helpers.groupcmd import grpcmd
 
 # CONFIG
 
@@ -28,14 +29,14 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 def searchmes(m):
-    chat = m.text[7:]
+    chat = grpcmd(m, "search")
     if chat == "" :
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
         \n*To Search for Content :-*
         Send /search `<search_query>`
         """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        query = m.text[8:]
+        query = grpcmd(m, "search")
         try:
             telegraph = Telegraph()
 

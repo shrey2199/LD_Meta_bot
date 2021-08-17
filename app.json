@@ -16,6 +16,10 @@
         "description": "The telegram bot token that you get from @BotFather.",
         "required": true
       },
+      "BOT_USERNAME": {
+        "description": "The Username of Bot.",
+        "required": true
+      },
       "SECRET": {
         "description": "Your Libdrive Settings SECRET.",
         "required": true
@@ -27,6 +31,10 @@
       "ADMIN_IDS": {
         "description": "The Telegram User ID of the Owner of the Bot. Get it by using /info in @MissRose_bot.",
         "required": true
+      },
+      "GROUP_IDS": {
+        "description": "The Group IDs where The Bot will be Added.",
+        "required": false
       },
       "PIC": {
         "description": "The Picture You want to appear when start command is used.",

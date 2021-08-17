@@ -3,6 +3,7 @@ import telebot
 import logging
 import requests
 import os
+from helpers.groupcmd import grpcmd
 
 # CONFIG
 
@@ -28,14 +29,14 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 def getm3u8(m):
-    chat = m.text[5:]
+    chat = grpcmd(m, "m3u8")
     if chat == "" :
         bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
         \n*To Get M3U8 of A Series :-*
         Send /m3u8 `<show_name>`
         """, parse_mode=telegram.ParseMode.MARKDOWN)
     else:
-        query = m.text[6:]
+        query = grpcmd(m, "m3u8")
         try:
             
             search_results = bot.send_message(m.chat.id, "`Searching Your LibDrive ...`\n\n`Query` : *{}*".format(query), parse_mode=telegram.ParseMode.MARKDOWN)

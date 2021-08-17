@@ -9,3 +9,5 @@ class Config(object):
     PIC = os.environ.get("PIC", "")
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", "")
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", "")
+    GROUP_IDS = os.environ.get("GROUP_IDS", "")
+    BOT_USERNAME = os.environ.get("BOT_USERNAME", "")

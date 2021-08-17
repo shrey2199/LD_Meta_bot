@@ -1,3 +1,4 @@
+from helpers.groupcmd import BOT_USERNAME
 import telegram
 import telebot
 import logging
@@ -18,6 +19,7 @@ ADMIN_IDS = Config.ADMIN_IDS
 PIC = Config.PIC
 HEROKU_API_KEY = Config.HEROKU_API_KEY
 HEROKU_APP_NAME = Config.HEROKU_APP_NAME
+BOT_USERNAME = Config.BOT_USERNAME
 
 try:
     ADMIN_LIST = ADMIN_IDS 
@@ -30,9 +32,19 @@ bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
+def grphelp(m):
+    ghelpstr = f"""*Available Commands in Group :*
+        \n/rebuild - *To Rebuild the Metadata of your Libdrive.*
+        \n/search - *To Search Libdrive and Get Direct Download Links.*
+        \n/find - *To Search Libdrive and Get View Online Links.*
+        \n/m3u8 - *To Get M3U8 Playlists from Bot itself.*
+        """
+    bot.send_message(m.chat.id, ghelpstr, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+
 def helpmes(m):
     global Helpstring
     Helpstring = """*This Bot will help you to Manage your Libdrive Server.*
+        \n/grouphelp - *To View Available Commands when Bot is Added in Group.*
     	\n/rebuild - *To Rebuild the Metadata of your Libdrive.*
         \n/restart - *To Restart LibDrive Server.*
         \n/fixconfig - *To Fix the Config of Your LibDrive by Adding Missing Keys.*
@@ -56,7 +68,7 @@ def helpmes(m):
         \n/hdyno - *To View Heroku Dyno Stats. (Only Heroku Deploys)*
         \n/search - *To Search Libdrive and Get Direct Download Links.*
         \n/find - *To Search Libdrive and Get View Online Links.*
-        \n/m3u8 - *To Get M3U8 Playlists from Bot itself. (Incomplete Feature For Now)*
+        \n/m3u8 - *To Get M3U8 Playlists from Bot itself.*
         \n/speedtest - *To Perform a Speedtest on the Server. (Completely Irrelevant 😂)*
         """
     global Inststring

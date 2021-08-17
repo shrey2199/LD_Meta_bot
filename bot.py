@@ -22,7 +22,7 @@ from helpers.search import searchmes
 from helpers.find import findmes
 from helpers.herokuctrl import hdyno_mod, hrestart_mod
 from helpers.m3u8 import getm3u8
-from helpers.help import helpmes, help_update_message, help_update_keyboard
+from helpers.help import helpmes, help_update_message, grphelp, help_update_keyboard
 from helpers.config import configmes, config_update_message, config_update_keyboard
 from helpers.categories import  catsetup, cat_update_message, cat_update_keyboard, action_category, action_keyboard, action_listcategory, action_addcategory
 from helpers.bot_id import configsetups
@@ -41,11 +41,13 @@ BOT_TOKEN = Config.BOT_TOKEN
 LD_DOMAIN = Config.LD_DOMAIN
 SECRET = Config.SECRET
 ADMIN_IDS = Config.ADMIN_IDS
+GROUP_IDS = Config.GROUP_IDS
 PIC = Config.PIC
 HEROKU_API_KEY = Config.HEROKU_API_KEY
 HEROKU_APP_NAME = Config.HEROKU_APP_NAME
+BOT_USERNAME = Config.BOT_USERNAME
 
-# BOT CODE
+# ADMIN / OWNER
 
 try:
     ADMIN_LIST = ADMIN_IDS 
@@ -54,11 +56,46 @@ except:
     ADMIN_LIST = []  # ==> Do Not Touch This !!
     restricted_mode = False
 
+ADMIN_CMD = [
+    'restart',
+    'fixconfig',
+    'assignid',
+    'unassignid',
+    'accounts',
+    'accountsclip', 
+    'addaccount', 
+    'rmaccount',
+    'rmaccid', 
+    'categories', 
+    'setanilist', 
+    'addcategory', 
+    'rmcategory', 
+    'settings', 
+    'config', 
+    'set', 
+    'ui', 
+    'setui',
+    'hdyno',
+    'hrestart',
+    'speedtest'
+]
+
+# GROUPS
+
+try:
+    GRP_LIST = GROUP_IDS
+    grprestricted_mode = True
+except:
+    GRP_LIST = []  # ==> Do Not Touch This !!
+    grprestricted_mode = True
+
 bot = telebot.TeleBot(BOT_TOKEN)
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 CHAT_IDS = ADMIN_IDS.split()
+
+# BOT CODE
 
 for i in CHAT_IDS:
     if len(i) != 0 and i.isnumeric() == True:
@@ -71,11 +108,24 @@ allchar = "abcdefghijklmnopqrstuvwxyz0123456789"
 def restricted(func):
     @wraps(func)
     def wrapped(update, *args, **kwargs):
-        user_id = update.chat.id
-        if (restricted_mode) and (str(user_id) not in ADMIN_LIST):
-            print("Unauthorized access denied for {} - {}.".format(user_id, update.from_user.username))
-            bot.send_message(update.chat.id, "*Error :\t\t*You are not Authorized to access the bot.\n\nPls Add Chat ID to Config Vars.\n\n[Contact Bot Developer](https://t.me/shrey_contact_bot) !!", parse_mode='Markdown', disable_web_page_preview=True)
-            return
+        chat_id = update.chat.id
+        user_id = update.from_user.id
+        if str(chat_id).startswith("-100"):
+            if (grprestricted_mode) and (str(chat_id) not in GRP_LIST):
+                print("Unauthorized access denied for {}.".format(user_id))
+                bot.send_message(update.chat.id, "*Error :\t\t*This Group is not Authorized to access the bot.\n\nPls Add Chat ID to Config Vars.\n\n[Contact Bot Developer](https://t.me/shrey_contact_bot) !!", parse_mode='Markdown', disable_web_page_preview=True)
+                return
+            elif any(cmd == update.text.split("@"+BOT_USERNAME)[0][1:] for cmd in ADMIN_CMD):
+                bot.send_message(update.chat.id, "*Error :\t\t*This Command can only be used by *Bot Admin* and in *Private Only* !!", parse_mode='Markdown', disable_web_page_preview=True)
+                return
+            elif "help" in update.text:
+                grphelp(m=update)
+                return
+        else:
+            if (restricted_mode) and (str(chat_id) not in ADMIN_LIST):
+                print("Unauthorized access denied for {} - {}.".format(user_id, update.from_user.username))
+                bot.send_message(update.chat.id, "*Error :\t\t*You are not Authorized to access the bot.\n\nPls Add Chat ID to Config Vars.\n\n[Contact Bot Developer](https://t.me/shrey_contact_bot) !!", parse_mode='Markdown', disable_web_page_preview=True)
+                return
         return func(update, *args, **kwargs)
     return wrapped
 
@@ -88,6 +138,11 @@ def start(m):
 @restricted
 def help(m):
     helpmes(m)
+
+@bot.message_handler(commands=['grouphelp'])
+@restricted
+def grouphelp(m):
+    grphelp(m)
 
 @bot.message_handler(commands=['speedtest'])
 @restricted

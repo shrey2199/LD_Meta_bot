@@ -83,9 +83,16 @@ Run The Docker Container and Define the Variables in One Command
   - Values :- It is a list of IDs of all the allowed groups and users who can use this bot in private. 
     - To supply multiple IDs in config.py seperate by spaces. 
     - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
+  - Default Value :- `[]` 
+  - Use :- Users with ids here can use the bot.
+
+- `GROUP_IDS`
+  - Values :- It is a list of IDs of all the allowed groups whose users can use this bot. 
+    - To supply multiple IDs in config.py seperate by spaces. 
+    - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
     - Group IDs should start with `-100`
   - Default Value :- `[]` 
-  - Use :- Users and groups with ids here can use the bot.
+  - Use :- Groups with ids here can use the bot.
 
 - `HEROKU_APP_NAME`
   - Values :- The Name of Your LibDrive Heroku App.
@@ -97,6 +104,11 @@ Run The Docker Container and Define the Variables in One Command
   - Default Value :- `""`
   - Use :- To Use `/hrestart` and `/hdyno` command.
 
+- `BOT_USERNAME`
+  - Values :- The Username of Your Bot.
+  - Default Value :- `""`
+  - Use :- To Use the Bot in Groups.
+
 ## Bot Commands
 
 `/start` - Welcome Message !!
@@ -107,6 +119,7 @@ Run The Docker Container and Define the Variables in One Command
 
     start - To Start The Bot.
     help - To Get Help about Using the Bot.
+    grouphelp - To Get Commands Available when Added in Group.
     restart - To Restart LibdDrive Server.
     rebuild - To Rebuild the Metadata of your Libdrive.
     fixconfig - To Fix LibDrive Config.
