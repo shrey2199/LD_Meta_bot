@@ -39,10 +39,6 @@
       "HEROKU_API_KEY": {
         "description": "The API Key of Heroku Account where Libdrive is set up.",
         "required": false
-      },
-      "HEROKU_EMAIL": {
-        "description": "The Email ID of Heroku Account where Libdrive is set up.",
-        "required": false
       }
     },
     "formation": {

@@ -88,17 +88,12 @@ Run The Docker Container and Define the Variables in One Command
   - Use :- Users and groups with ids here can use the bot.
 
 - `HEROKU_APP_NAME`
-  - Values :- The Name of Your Heroku App.
+  - Values :- The Name of Your LibDrive Heroku App.
   - Default Value :- `""`
   - Use :- To Use `/hrestart` and `/hdyno` command.
 
 - `HEROKU_API_KEY`
-  - Values :- The API KEY of Your Heroku Account.
-  - Default Value :- `""`
-  - Use :- To Use `/hrestart` and `/hdyno` command.
-
-- `HEROKU_EMAIL`
-  - Values :- The Email ID of Your Heroku Account.
+  - Values :- The API KEY of Your LibDrive Heroku Account.
   - Default Value :- `""`
   - Use :- To Use `/hrestart` and `/hdyno` command.
 

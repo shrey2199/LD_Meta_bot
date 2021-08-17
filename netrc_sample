@@ -1,3 +1,0 @@
-machine api.heroku.com
-        login $HEROKU_EMAIL
-        password $HEROKU_API_KEY
