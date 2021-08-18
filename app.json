@@ -17,7 +17,7 @@
         "required": true
       },
       "BOT_USERNAME": {
-        "description": "The Username of Bot.",
+        "description": "The Username of Bot without '@'.",
         "required": true
       },
       "SECRET": {
@@ -35,6 +35,11 @@
       "GROUP_IDS": {
         "description": "The Group IDs where The Bot will be Added.",
         "required": false
+      },
+      "GROUP_CMDS": {
+        "description": "The Commands Usable by Everyone in Group Seperated by Spaces.",
+        "required": false,
+        "value":"search find m3u8"
       },
       "PIC": {
         "description": "The Picture You want to appear when start command is used.",

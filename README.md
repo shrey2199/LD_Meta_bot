@@ -31,10 +31,6 @@ And then run the bot by
 
 ## Deploy with Docker
 
-### Two Methods
-
-#### Method 1
-
 Edit config.py with variables listed below !
 
 Build Docker Image.. 
@@ -45,45 +41,34 @@ Run Docker Container..
 
     docker run --name libdrivebot libdrivebot
 
-#### Method 2
-
-Build Docker Image ..
-
-    docker build . -t libdrivebot
-
-Run The Docker Container and Define the Variables in One Command
-
-    docker run --name libdrivebot -e BOT_TOKEN="<your_bot_token>" -e LD_DOMAIN="<your_libdrive_domain>" -e SECRET="<your_libdrive_secret>" -e ADMIN_IDS="<chat_ids>" -e PIC="<picture_url>" -d libdrivebot
-
 ## Variables
 
 - `BOT_TOKEN`
   - Values :- Valid BOT TOKEN Obtained from Botfather.
-  - Default Value :- `"XXXXXXXXX:ABCDEFGHIJKLMNOPQRST"`
+  - Example Value :- `XXXXXXXXX:ABCDEFGHIJKLMNOPQRST`
   - Use :- To connect to Telegram as BOT.
 
 - `LD_DOMAIN`
   - Values :- Domain of LibDrive Server.
-  - Default Value :- `<appname>.herokuapp.com`
+  - Example Value :- `<appname>.herokuapp.com`
     - Enter The Domain without the Protocols `https://` or `http://`
     - Don't enter a `/` in the end of The Domain.
   - Use :- To connect to Libdrive.
 
 - `SECRET`
   - Values :- Secret of LibDrive Server Settings - The Secret Key set in LibDrive Config.
-  - Default Value :- `""`
   - Use :- To connect to Libdrive.
 
 - `PIC`
   - Values :- The Picture You want to appear when start command is used.
-  - Default Value :- `""`
+  - Example Value :- `https://example.com/example.png`
   - Use :- Send Photo with `/start` command.
 
 - `ADMIN_IDS`
-  - Values :- It is a list of IDs of all the allowed groups and users who can use this bot in private. 
+  - Values :- It is a list of IDs of all the allowed users who can use this bot in private. (Get it from [Miss Rose Bot](t.me/missrose_bot))
     - To supply multiple IDs in config.py seperate by spaces. 
     - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
-  - Default Value :- `[]` 
+  - Example Value :- `Numerical Value` 
   - Use :- Users with ids here can use the bot.
 
 - `GROUP_IDS`
@@ -91,22 +76,25 @@ Run The Docker Container and Define the Variables in One Command
     - To supply multiple IDs in config.py seperate by spaces. 
     - To supply multiple IDs from Environemnt variable (Heroku & Docker) seperate by spaces.
     - Group IDs should start with `-100`
-  - Default Value :- `[]` 
+  - Default Value :- `-100XXXXXXXXX` 
   - Use :- Groups with ids here can use the bot.
 
 - `HEROKU_APP_NAME`
   - Values :- The Name of Your LibDrive Heroku App.
-  - Default Value :- `""`
   - Use :- To Use `/hrestart` and `/hdyno` command.
 
 - `HEROKU_API_KEY`
   - Values :- The API KEY of Your LibDrive Heroku Account.
-  - Default Value :- `""`
   - Use :- To Use `/hrestart` and `/hdyno` command.
 
 - `BOT_USERNAME`
-  - Values :- The Username of Your Bot.
-  - Default Value :- `""`
+  - Values :- The Username of Your Bot without `@`.
+  - Use :- To Use the Bot in Groups.
+
+- `GROUP_CMDS`
+  - Values :- The Commands Usable in Groups where Your Bot is Added.
+  - Example Value :- `search find m3u8`
+    - Seperate Commands with Spaces.
   - Use :- To Use the Bot in Groups.
 
 ## Bot Commands

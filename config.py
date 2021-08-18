@@ -11,3 +11,4 @@ class Config(object):
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", "")
     GROUP_IDS = os.environ.get("GROUP_IDS", "")
     BOT_USERNAME = os.environ.get("BOT_USERNAME", "")
+    GROUP_CMDS = os.environ.get("GROUP_CMDS", "")
