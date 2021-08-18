@@ -66,8 +66,11 @@ except:
     GRP_LIST = []  # ==> Do Not Touch This !!
     grprestricted_mode = True
 
-GROUP_COMMANDS = GROUP_CMDS.split()
-GROUP_COMMANDS.extend(['help'])
+try:
+    GROUP_COMMANDS = GROUP_CMDS.split()
+    GROUP_COMMANDS.extend(['help'])
+except:
+    GROUP_COMMANDS = []
 
 # BOT CODE
 
