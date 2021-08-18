@@ -16,5 +16,5 @@ def grpcmd(mes, cmd):
     if BOT_USERNAME in mes.text :
         query = mes.text.split(BOT_USERNAME)[1].strip()
     else:
-        query = mes[(len(cmd)+2):]
+        query = mes.text[(len(cmd)+2):]
     return query
