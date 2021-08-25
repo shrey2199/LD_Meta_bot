@@ -141,17 +141,8 @@ class accountsetup:
                 confacc.append(accdic)
 
                 headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                     'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                     'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
                     'accept-language': 'en-US,en;q=0.9',
                 }
 
@@ -194,17 +185,8 @@ class accountsetup:
                         continue
                 
                 headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                     'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                     'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
                     'accept-language': 'en-US,en;q=0.9',
                 }
 
@@ -250,17 +232,8 @@ class accountsetup:
                         continue
                 
                 headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                     'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                     'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
                     'accept-language': 'en-US,en;q=0.9',
                 }
 

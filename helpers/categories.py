@@ -107,17 +107,8 @@ class catsetup:
                         continue
                 
                 headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                     'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                     'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
                     'accept-language': 'en-US,en;q=0.9',
                 }
 
@@ -163,12 +154,15 @@ class catsetup:
                 telebot.types.InlineKeyboardButton('Anilist - Movies', callback_data='amovies'),
                 telebot.types.InlineKeyboardButton('Anilist - TV Shows', callback_data='atv_shows')
             )
-            catadddet = "*Category Details :-*\n\n*Name : *" + name + "\n*Folder ID : *" + folder_id + "\n\nNow Choose Category Type (*Within 15 seconds*) :-"
+            keyboard.row(
+                telebot.types.InlineKeyboardButton('❌ CANCEL ❌', callback_data='canceladd')
+            )
+            catadddet = "*Category Details :-*\n\n*Name : *`" + name + "`\n*Folder ID : *`" + folder_id + "`\n\nNow Choose Category Type :-"
             global catadd
             catadd = bot.send_message(m.chat.id, catadddet, reply_markup=keyboard, parse_mode=telegram.ParseMode.MARKDOWN)
             
             global cataddS
-            cataddS = "Adding Category `" + name + "` to Libdrive ...\n\n`This might take around 15-30 Seconds...`"
+            cataddS = "Adding Category `" + name + "` to Libdrive ...\n\n`This might take around 5-10 Seconds...`"
 
         
 
@@ -199,17 +193,8 @@ class catsetup:
                         continue
                 
                 headers = {
-                    'authority': LD_DOMAIN,
-                    'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                     'accept': 'application/json, text/plain, */*',
-                    'sec-ch-ua-mobile': '?0',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                     'content-type': 'application/json;charset=UTF-8',
-                    'origin': 'https://' + LD_DOMAIN,
-                    'sec-fetch-site': 'same-origin',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-dest': 'empty',
-                    'referer': 'https://' + LD_DOMAIN + '/settings',
                     'accept-language': 'en-US,en;q=0.9',
                 }
 
@@ -268,12 +253,13 @@ def cat_update_message(m, data):
                 m.chat.id, message_id=catadd.message_id,
                 parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "atv_shows"
+    elif data == 'canceladd':
+        bot.delete_message(
+            m.chat.id, message_id=catadd.message_id
+        )
     elif data == "closecat":
         bot.delete_message(
             m.chat.id, message_id=categories.message_id
-        )
-        bot.delete_message(
-            m.chat.id, message_id=m.message.id
         )
     elif str(data).startswith("cat"):
         pg = "*Category Configs :-*\n\n"
@@ -369,17 +355,8 @@ def action_addcategory(m, type_media):
         confcat.append(category_dict)
 
         headers = {
-            'authority': LD_DOMAIN,
-            'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
             'accept': 'application/json, text/plain, */*',
-            'sec-ch-ua-mobile': '?0',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
             'content-type': 'application/json;charset=UTF-8',
-            'origin': 'https://' + LD_DOMAIN,
-            'sec-fetch-site': 'same-origin',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-dest': 'empty',
-            'referer': 'https://' + LD_DOMAIN + '/settings',
             'accept-language': 'en-US,en;q=0.9',
         }
 
@@ -432,17 +409,8 @@ def action_category(action, m):
             )
 
             headers = {
-                'authority': LD_DOMAIN,
-                'sec-ch-ua': '" Not;A Brand";v="99", "Microsoft Edge";v="91", "Chromium";v="91"',
                 'accept': 'application/json, text/plain, */*',
-                'sec-ch-ua-mobile': '?0',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
                 'content-type': 'application/json;charset=UTF-8',
-                'origin': 'https://' + LD_DOMAIN,
-                'sec-fetch-site': 'same-origin',
-                'sec-fetch-mode': 'cors',
-                'sec-fetch-dest': 'empty',
-                'referer': 'https://' + LD_DOMAIN + '/settings',
                 'accept-language': 'en-US,en;q=0.9',
             }
 
