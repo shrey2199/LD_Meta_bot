@@ -7,7 +7,9 @@ import requests
 import os
 import json
 import time
+import signal
 import heroku3
+import sys
 from telegraph import Telegraph
 from functools import wraps
 from random import *
@@ -28,6 +30,7 @@ from helpers.categories import  catsetup, cat_update_message, cat_update_keyboar
 from helpers.bot_id import configsetups
 from helpers.accounts import accountsetup
 from helpers.settings import settingsedit
+from helpers.signal import SIG
 
 # UPTIME
 
@@ -51,8 +54,11 @@ GROUP_CMDS = Config.GROUP_CMDS
 # ADMIN / OWNER
 
 try:
-    ADMIN_LIST = ADMIN_IDS 
-    restricted_mode = True
+    ADMIN_LIST = ADMIN_IDS
+    if len(ADMIN_LIST) != 0:
+        restricted_mode = True
+    else:
+        restricted_mode = False
 except:
     ADMIN_LIST = []  # ==> Do Not Touch This !!
     restricted_mode = False
@@ -273,5 +279,8 @@ def iq_callback(query):
     global data
     data = query.data
     get_callback(query)
+
+signal.signal(signal.SIGINT, SIG.sigint_handler)
+signal.signal(signal.SIGTERM, SIG.sigterm_handler)
 
 bot.polling(none_stop=True, timeout=999999)
