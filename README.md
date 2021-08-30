@@ -108,7 +108,7 @@ Run Docker Container..
     start - To Start The Bot.
     help - To Get Help about Using the Bot.
     grouphelp - To Get Commands Available when Added in Group.
-    restart - To Restart LibdDrive Server.
+    restart - To Restart LibDrive Server.
     rebuild - To Rebuild the Metadata of your Libdrive.
     fixconfig - To Fix LibDrive Config.
     assignid - To assign bot_id.
