@@ -69,6 +69,8 @@ def searchmes(m):
                             num_of_results += 1
                             title = media["title"]
                             type_ = cat["categoryInfo"]["type"]
+                            file_name = media["name"]
+                            category_name = cat["categoryInfo"]["name"]
                             if "releaseDate" in media.keys():
                                 releaseDate = media["releaseDate"]
                             else:
@@ -141,6 +143,8 @@ def searchmes(m):
                             TG_html = '''<p>
                                             <img src=''' + str(backdrop) + '''>
                                             <b>Name : </b><code>''' + str(title) + '''</code><br>
+                                            <b> - Category : </b><code>''' + str(category_name) + '''</code><br>
+                                            <b> - File/Folder : </b><code>''' + str(file_name) + '''</code><br>
                                             <b> - Overview : </b><code>''' + str(overview) + '''</code><br>
                                             <b> - Release Date : </b><code>''' + str(releaseDate) + '''</code><br>
                                             <b> - Type : </b><code>''' + str(type_) + '''</code><br><br>
