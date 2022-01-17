@@ -133,6 +133,7 @@ Run Docker Container..
     find - To Search Your LibDrive (View Online Links).
     m3u8 - To get m3u8 Playlists. (Incomplete)
     speedtest - To Perform a Speedtest on the Server. (Completely Irrelevant 😂)
+    webhooks - To View the Webhooks Usage of this Bot.
 
 ## Credits
 

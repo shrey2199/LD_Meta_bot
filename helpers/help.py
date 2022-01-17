@@ -69,6 +69,7 @@ def helpmes(m):
         \n/search - *To Search Libdrive and Get Direct Download Links.*
         \n/find - *To Search Libdrive and Get View Online Links.*
         \n/m3u8 - *To Get M3U8 Playlists from Bot itself.*
+        \n/webhooks - *To View the Webhooks Usage of this Bot.*
         \n/speedtest - *To Perform a Speedtest on the Server. (Completely Irrelevant 😂)*
         """
     global Inststring

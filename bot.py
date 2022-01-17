@@ -143,6 +143,17 @@ def start(m):
     else:
         startmessage(m, botStartTime)
 
+@bot.message_handler(commands=['webhooks'])
+@restricted
+def webhooks(m):
+    webhook_str = f"""*This Bot is Capable of Searching Libdrive using URLs that redirect to telegram and Start searching with a click.*
+    \nFollowing are the supported parameters and usage examples :
+    \n 1. *Search* : `https://telegram.me/{BOT_USERNAME}?start=search_<query>`
+    \n 2. *M3U8* : `https://telegram.me/{BOT_USERNAME}?start=m3u8_<query>`
+    \n 3. *Find* : `https://telegram.me/{BOT_USERNAME}?start=find_<query>`
+    \n\t\t Use only *_* to separate the words in <query>. """
+    bot.send_message(m.chat.id, webhook_str, parse_mode='Markdown', disable_web_page_preview=True)
+
 @bot.message_handler(commands=['help'])
 @restricted
 def help(m):
