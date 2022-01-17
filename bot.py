@@ -118,10 +118,30 @@ def restricted(func):
         return func(update, *args, **kwargs)
     return wrapped
 
+def extract_url_parameter(text):
+    if len(text.split()) > 1:
+        parameter = (text.split()[1]).split("_")[0]
+        value = " ".join((text.split()[1]).split("_")[1:])
+        return {'parameter': parameter, 'value': value}
+    else:
+        return None
+
 @bot.message_handler(commands=['start','hi'])
 @restricted
 def start(m):
-    startmessage(m, botStartTime)
+    param = extract_url_parameter(m.text)
+    if param:
+        m.text = f"/{param['parameter']} {param['value']}"
+        if param['parameter'] == 'search':
+            searchmes(m)
+        elif param['parameter'] == 'm3u8':
+            getm3u8(m)
+        elif param['parameter'] == 'find':
+            findmes(m)
+        else:
+            bot.send_message(m.chat.id, "*Error :\t\t*Invalid Parameter.", parse_mode='Markdown', disable_web_page_preview=True)
+    else:
+        startmessage(m, botStartTime)
 
 @bot.message_handler(commands=['help'])
 @restricted
@@ -262,7 +282,6 @@ def iq_callback(query):
     get_callback(query)
 
 def get_callback(query):
-    bot.answer_callback_query(query.id)
     if data == 'instructions' or data == 'help' or data == 'closehelp':
         help_update_message(query.message, data)
     elif data == '1' or data == '2' or data == '3' or data == 'close':
