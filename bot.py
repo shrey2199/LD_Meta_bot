@@ -1,36 +1,42 @@
 # -*- coding: utf-8 -*-
 
-import telegram
-import telebot
-import logging
-import requests
-import os
 import json
-import time
+import logging
+import os
 import signal
-import heroku3
 import sys
-from telegraph import Telegraph
+import time
 from functools import wraps
 from random import *
 
-# HELPERS / MODULES ==> Didn't Change the folder to modules cause Deploys will be bricked..
+import heroku3
+import requests
+import telebot
+import telegram
+from telegraph import Telegraph
 
-from helpers.start import startmessage
-from helpers.speedtest import speedtestmes
+from helpers.accounts import accountsetup
+from helpers.bot_id import configsetups
+from helpers.categories import (action_addcategory, action_category,
+                                action_keyboard, action_listcategory,
+                                cat_update_keyboard, cat_update_message,
+                                catsetup)
+from helpers.config import (config_update_keyboard, config_update_message,
+                            configmes)
+from helpers.find import findmes
+from helpers.help import (grphelp, help_update_keyboard, help_update_message,
+                          helpmes)
+from helpers.herokuctrl import hdyno_mod, hrestart_mod
+from helpers.m3u8 import getm3u8
 from helpers.rebuild import rebuildmes
 from helpers.restart import restartmes
 from helpers.search import searchmes
-from helpers.find import findmes
-from helpers.herokuctrl import hdyno_mod, hrestart_mod
-from helpers.m3u8 import getm3u8
-from helpers.help import helpmes, help_update_message, grphelp, help_update_keyboard
-from helpers.config import configmes, config_update_message, config_update_keyboard
-from helpers.categories import  catsetup, cat_update_message, cat_update_keyboard, action_category, action_keyboard, action_listcategory, action_addcategory
-from helpers.bot_id import configsetups
-from helpers.accounts import accountsetup
 from helpers.settings import settingsedit
 from helpers.signal import SIG
+from helpers.start import startmessage
+
+# HELPERS / MODULES ==> Didn't Change the folder to modules cause Deploys will be bricked..
+
 
 # UPTIME
 
@@ -164,11 +170,6 @@ def help(m):
 def grouphelp(m):
     grphelp(m)
 
-@bot.message_handler(commands=['speedtest'])
-@restricted
-def speedtest(m):
-    speedtestmes(m)    
-
 @bot.message_handler(commands=['rebuild'])
 @restricted
 def rebuild(m):
@@ -293,11 +294,11 @@ def iq_callback(query):
     get_callback(query)
 
 def get_callback(query):
-    if data == 'instructions' or data == 'help' or data == 'closehelp':
+    if data in ['instructions', 'help', 'closehelp']:
         help_update_message(query.message, data)
-    elif data == '1' or data == '2' or data == '3' or data == 'close':
+    elif data in ['1', '2', '3', 'close']:
         config_update_message(query.message, data)
-    elif data == 'movies' or data == 'tv_shows' or data == 'amovies' or data == 'atv_shows':
+    elif data in ['movies', 'tv_shows', 'amovies', 'atv_shows']:
         cat_update_message(query.message, data)
         action_addcategory(query.message, data)
     else:

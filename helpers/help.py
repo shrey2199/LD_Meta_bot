@@ -1,8 +1,10 @@
-from helpers.groupcmd import BOT_USERNAME
-import telegram
-import telebot
 import logging
 import time
+
+import telebot
+import telegram
+
+from helpers.groupcmd import BOT_USERNAME
 
 # UPTIME
 
@@ -13,12 +15,8 @@ botStartTime = time.time()
 from config import Config
 
 BOT_TOKEN = Config.BOT_TOKEN
-LD_DOMAIN = Config.LD_DOMAIN
-SECRET = Config.SECRET
 ADMIN_IDS = Config.ADMIN_IDS
 PIC = Config.PIC
-HEROKU_API_KEY = Config.HEROKU_API_KEY
-HEROKU_APP_NAME = Config.HEROKU_APP_NAME
 BOT_USERNAME = Config.BOT_USERNAME
 
 try:
@@ -33,7 +31,7 @@ logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 def grphelp(m):
-    ghelpstr = f"""*Available Commands in Group :*
+    ghelpstr = """*Available Commands in Group :*
         \n/rebuild - *To Rebuild the Metadata of your Libdrive.*
         \n/search - *To Search Libdrive and Get Direct Download Links.*
         \n/find - *To Search Libdrive and Get View Online Links.*
@@ -101,8 +99,8 @@ def get_callback(query):
     help_update_message(query.message)
 
 def help_update_message(m, data):
-    if data == 'instructions' or data == 'help' or data == 'closehelp':
-        if data == 'instructions' or data == 'help':
+    if data in ['instructions', 'help', 'closehelp']:
+        if data in ['instructions', 'help']:
             if data == 'instructions':
                 pg = Inststring
             if data == 'help':
@@ -113,10 +111,6 @@ def help_update_message(m, data):
                 parse_mode=telegram.ParseMode.MARKDOWN)
         elif data == 'closehelp':
             bot.delete_message(m.chat.id, message_id=HelpMessage.message_id)
-        else:
-            pass 
-    else:
-        pass
 
 def help_update_keyboard(pg, data):
     if data == 'instructions':

@@ -1,19 +1,17 @@
-import telegram
-import telebot
 import logging
 import time
 
-# CONFIG
+import telebot
+import telegram
 
 from config import Config
 
+# CONFIG
+
+
 BOT_TOKEN = Config.BOT_TOKEN
-LD_DOMAIN = Config.LD_DOMAIN
-SECRET = Config.SECRET
 ADMIN_IDS = Config.ADMIN_IDS
 PIC = Config.PIC
-HEROKU_API_KEY = Config.HEROKU_API_KEY
-HEROKU_APP_NAME = Config.HEROKU_APP_NAME
 
 try:
     ADMIN_LIST = ADMIN_IDS 

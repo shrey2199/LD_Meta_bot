@@ -1,15 +1,17 @@
-import telegram
-import telebot
-import logging
-import requests
-from telegraph import Telegraph
 import json
+import logging
 import time
 from random import *
 
-# CONFIG
+import requests
+import telebot
+import telegram
+from telegraph import Telegraph
 
 from config import Config
+
+# CONFIG
+
 
 BOT_TOKEN = Config.BOT_TOKEN
 LD_DOMAIN = Config.LD_DOMAIN
@@ -226,7 +228,7 @@ def get_callback(query):
     action_keyboard(query.message)
 
 def cat_update_message(m, data):
-    if data == 'movies' or data == 'tv_shows' or data == 'amovies' or data == 'atv_shows':
+    if data in ['movies', 'tv_shows', 'amovies', 'atv_shows']:
         global type_media
         global catadd2
         if data == 'movies':
@@ -247,8 +249,8 @@ def cat_update_message(m, data):
                 m.chat.id, message_id=catadd.message_id,
                 parse_mode=telegram.ParseMode.MARKDOWN)
             type_media = "amovies"
-        elif data == 'atv_shows':
-            messg = cataddS          
+        else:
+            messg = cataddS
             catadd2 = bot.edit_message_text(messg,
                 m.chat.id, message_id=catadd.message_id,
                 parse_mode=telegram.ParseMode.MARKDOWN)
@@ -274,10 +276,6 @@ def cat_update_message(m, data):
                     reply_markup=cat_update_keyboard(pg, data),
                     parse_mode=telegram.ParseMode.MARKDOWN
                 )
-            else:
-                pass
-    else:
-        pass
 
 def cat_update_keyboard(pg, data):
     if data == "closecat":
