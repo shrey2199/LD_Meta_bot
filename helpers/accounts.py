@@ -34,9 +34,7 @@ allchar = "abcdefghijklmnopqrstuvwxyz0123456789"
 class accountsetup:
     def accountsmes(m):
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
-        
         try:
-
             tempacc = bot.send_message(m.chat.id, text="`Getting Your Accounts ...`", parse_mode=telegram.ParseMode.MARKDOWN)
             r = requests.get(url)
             res = r.json()
@@ -63,7 +61,6 @@ class accountsetup:
     def accountsclipmes(m):
         url = 'https://' + LD_DOMAIN + '/api/v1/config?secret=' + SECRET
         try:
-
             tempacc = bot.send_message(m.chat.id, text="`Getting Your Accounts ...`", parse_mode=telegram.ParseMode.MARKDOWN)
             r = requests.get(url)
             res = r.json()
@@ -111,10 +108,10 @@ class accountsetup:
 
     def addaccountmes(m):
         chat = m.text[11:]
-        if chat == "":
+        if chat == "" or len(m.text.split()) < 3:
             bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
             \n*To Add an Account :-*
-            Send /addaccount `<user> <pass> <pic>`
+            Send /addaccount `<user> <pass> <pic>(optional)`
             """, parse_mode=telegram.ParseMode.MARKDOWN)
         else:
             bot_id = "".join(choice(allchar) for x in range(randint(8, 8)))
@@ -164,7 +161,7 @@ class accountsetup:
 
     def rmaccountmes(m):
         chat = m.text[10:]
-        if chat == "":
+        if chat == "" or len(m.text.split()) != 3:
             bot.send_message(m.chat.id, text = """Pls Send the Command with Valid Queries !!
             \n*To Remove an Account :-*
             Send /rmaccount `<user> <pass>`
